@@ -5,7 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <meta name="theme-color" content="#080910" />
   <meta name="description" content="Choose your lineup and race length, then watch cartoon racers slip, slide, and swap places on the way to a randomized finish." />
-  <title>Soap Slide — The slippery grand prix</title>
+  <title>The Kyle’s Power Shower Race</title>
   <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Cpath d='M8 49Q15 42 22 49T36 49T52 49M16 39L11 26M29 35L32 15M43 39L54 28' fill='none' stroke='%234ac9ff' stroke-width='5' stroke-linecap='round'/%3E%3Ccircle cx='18' cy='15' r='5' fill='%23b396ff'/%3E%3Ccircle cx='48' cy='14' r='4' fill='%23ff30be'/%3E%3C/svg%3E" />
   <style>
 @font-face {
@@ -55,81 +55,12 @@ button:active:not(:disabled) { transform: translateY(1px); }
   white-space: nowrap;
 }
 
-/* Header and synthwave wordmark */
+/* Page and title */
 .page-shell { max-width: 1496px; margin: auto; padding: 0 64px; }
-.site-header {
-  height: 112px;
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  gap: 24px;
-  border-bottom: 1px solid var(--line);
-}
-.brand {
-  display: flex;
-  align-items: center;
-  gap: 12px;
-  text-decoration: none;
-  color: var(--ink);
-  font-family: var(--display);
-  font-size: 31px;
-  font-weight: 800;
-  font-style: italic;
-  letter-spacing: .4px;
-  text-transform: uppercase;
-}
-.brand-icon { width: 55px; height: 55px; flex-shrink: 0; }
-.brand-text { display: flex; flex-direction: column; line-height: .86; }
-.brand-main, .brand-slide {
-  color: #fff;
-  background: linear-gradient(180deg, #fff 4%, #c6afff 38%, #a866f4 56%, #46d9ff 84%, #f0fdff 100%);
-  background-clip: text;
-  -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
-  filter: drop-shadow(0 0 6px #bd3df655);
-}
-.brand-main { font-size: 35px; }
-.brand-slide { font-size: 30px; }
-.brand-dot { color: var(--pink); }
-.header-tag {
-  display: flex;
-  align-items: center;
-  gap: 9px;
-  padding: 10px 16px;
-  color: #b6a0ea;
-  background: #1a1725;
-  border: 1px solid #403450;
-  border-radius: 30px;
-  font-size: 10px;
-  font-weight: 700;
-  letter-spacing: 1.7px;
-}
-.tiny-star { color: var(--pink); font-size: 16px; }
-.text-button {
-  display: flex;
-  align-items: center;
-  gap: 8px;
-  padding: 10px 0;
-  background: transparent;
-  border: 0;
-  color: #b7c2d8;
-  font-size: 12px;
-  font-weight: 600;
-}
-.text-button:hover { color: var(--cyan); }
-.help-icon {
-  display: grid;
-  place-items: center;
-  width: 18px;
-  height: 18px;
-  border: 1px solid #64728c;
-  border-radius: 100%;
-  color: var(--cyan);
-  font-size: 11px;
-}
 
 /* Hero */
 .hero { display: flex; align-items: center; justify-content: space-between; padding: 42px 0 35px; gap: 30px; }
+.hero-copy { min-width: 0; }
 .eyebrow {
   display: flex;
   align-items: center;
@@ -146,14 +77,16 @@ h1 {
   display: inline-block;
   margin: 13px 0 15px;
   font-family: var(--display);
-  font-size: clamp(43px, 4.7vw, 68px);
+  font-size: clamp(42px, 4.5vw, 66px);
   font-weight: 800;
   font-style: italic;
   line-height: 1.02;
   letter-spacing: .1px;
   text-transform: uppercase;
 }
-h1 > span {
+h1 .title-owner { display: block; margin-bottom: 5px; color: #f6f7ff; font-size: .62em; letter-spacing: 1.2px; }
+h1 .title-race {
+  display: block;
   background: linear-gradient(180deg, #ffe4fa 0%, #ff64ce 35%, #e77afd 64%, #67d4ff 100%);
   background-clip: text;
   -webkit-background-clip: text;
@@ -161,7 +94,6 @@ h1 > span {
   -webkit-text-fill-color: transparent;
   filter: drop-shadow(0 0 12px #ff30b92d);
 }
-h1 svg { position: absolute; bottom: -10px; width: 31%; height: 14px; right: 0; color: var(--pink); }
 .hero p { margin: 0; color: #a2afc7; font-size: 13px; line-height: 1.8; }
 .hero-badge {
   width: 240px;
@@ -176,7 +108,7 @@ h1 svg { position: absolute; bottom: -10px; width: 31%; height: 14px; right: 0; 
 .hero-badge-main { display: block; margin: 8px 0 5px; color: #f7f3ff; font-family: var(--display); font-size: 25px; font-weight: 800; font-style: italic; text-transform: uppercase; line-height: 1.1; }
 .hero-badge-sub { display: block; color: #a39ab9; font-size: 10px; line-height: 1.6; }
 
-/* Race frame and controls; canvas art and its geometry stay unchanged. */
+/* Race frame and controls */
 .game-layout { display: grid; grid-template-columns: minmax(0, 1fr) 285px; gap: 23px; align-items: start; }
 .race-column { min-width: 0; }
 .race-toolbar {
@@ -192,9 +124,7 @@ h1 svg { position: absolute; bottom: -10px; width: 31%; height: 14px; right: 0; 
   border-radius: 15px 15px 0 0;
 }
 .room-label { display: flex; align-items: center; gap: 9px; font-size: 12px; }
-.room-label strong { font-weight: 600; }
-.live-dot { width: 7px; height: 7px; border-radius: 100%; background: var(--cyan); box-shadow: 0 0 0 3px #49ccff14, 0 0 10px #49ccff44; }
-.room-tag { margin-left: 8px; color: #8492aa; font-size: 8px; letter-spacing: .9px; }
+.room-tag { color: #98a7c0; font-size: 9px; letter-spacing: 1px; }
 .stage-controls { display: flex; align-items: center; gap: 6px; }
 .icon-button { display: grid; place-items: center; width: 28px; height: 28px; padding: 5px; border: 0; border-radius: 6px; background: transparent; color: #acb9d0; }
 .icon-button:hover, .icon-button[aria-pressed='true'] { background: #232334; color: var(--purple); }
@@ -211,10 +141,9 @@ h1 svg { position: absolute; bottom: -10px; width: 31%; height: 14px; right: 0; 
   aspect-ratio: 1200 / 650;
 }
 .race-stage canvas { display: block; width: 100%; height: 100%; }
-.stage-topline { position: absolute; top: 20px; left: 20px; right: 20px; display: flex; justify-content: space-between; align-items: center; pointer-events: none; }
-.circuit-pill { border: 1px solid #35435e; color: #bcecff; background: #101829ed; border-radius: 20px; padding: 7px 10px; font-size: 8px; letter-spacing: 1.25px; font-weight: 700; }
-.circuit-pill > span { margin-right: 5px; color: var(--cyan); }
-.timer { background: #101829ed; color: #ecf5ff; border-radius: 6px; font-family: monospace; padding: 6px 9px; font-size: 10px; }
+.stage-topline { position: absolute; top: 14px; left: 14px; right: 14px; display: flex; justify-content: flex-end; pointer-events: none; }
+.timer { display: flex; flex-direction: column; align-items: flex-end; gap: 2px; padding: 8px 12px; background: #101321ed; border: 1px solid #655180; border-radius: 10px; color: #f7f5ff; font-family: 'Courier New', monospace; font-size: clamp(24px, 2.8vw, 36px); font-weight: 700; line-height: 1; font-variant-numeric: tabular-nums; box-shadow: 0 3px 16px #07071144; }
+.timer-limit { color: #c7b6e9; font-size: 11px; line-height: 1.2; }
 .ready-banner { position: absolute; left: 20px; top: 65px; font-family: var(--display); font-size: clamp(14px, 1.4vw, 20px); font-style: italic; font-weight: 800; text-transform: uppercase; white-space: nowrap; color: #c9bdff; display: flex; align-items: center; gap: 8px; pointer-events: none; }
 .ready-spark { font-family: Arial, sans-serif; font-size: 17px; color: #bf62ba; }
 .stage-bottomline { position: absolute; bottom: 16px; left: 20px; right: 20px; display: flex; justify-content: space-between; align-items: center; pointer-events: none; color: #d4ecff; font-size: 8px; letter-spacing: 1.1px; font-weight: 700; }
@@ -284,11 +213,9 @@ h1 svg { position: absolute; bottom: -10px; width: 31%; height: 14px; right: 0; 
 /* Editable lineup cards echo the cyan and purple slots in the reference. */
 .lineup-card { overflow: hidden; background: var(--panel); border: 1px solid var(--line); border-radius: 15px; }
 .lineup-heading { display: flex; justify-content: space-between; align-items: center; padding: 24px 22px 0; }
-.lineup-heading .eyebrow { font-size: 8px; letter-spacing: 1.5px; }
 h2 { margin: 0; font-family: var(--display); font-weight: 800; font-style: italic; text-transform: uppercase; }
-.lineup-heading h2 { display: flex; align-items: center; gap: 11px; margin-top: 8px; font-size: 28px; letter-spacing: .1px; }
+.lineup-heading h2 { display: flex; align-items: center; gap: 11px; font-size: 28px; letter-spacing: .1px; }
 .lineup-heading h2 > span { padding: 4px 6px; background: #241e35; border: 1px solid #463a5f; border-radius: 6px; color: var(--purple); font-family: Arial, sans-serif; font-size: 10px; font-style: normal; letter-spacing: 0; }
-.lineup-soap { width: 42px; height: 42px; }
 .lineup-description { margin: 13px 22px 20px; color: #96a2ba; font-size: 10px; line-height: 1.5; }
 .lineup-customize { padding: 0 22px 15px; }
 .character-pool-control { display: flex; justify-content: space-between; align-items: center; gap: 12px; margin: 0 0 10px; }
@@ -339,12 +266,12 @@ h2 { margin: 0; font-family: var(--display); font-weight: 800; font-style: itali
 .how-art { margin-left: auto; padding-right: 14px; color: var(--purple); font-size: 29px; transform: rotate(-16deg); }
 .chase-art { color: var(--pink); font-size: 32px; }
 .how-connector { margin-right: 10px; color: #5e5678; font-size: 16px; }
-.site-footer { display: flex; justify-content: space-between; align-items: center; gap: 15px; padding: 27px 0 32px; color: #8492ab; font-size: 8px; }
+.site-footer { display: flex; flex-wrap: wrap; justify-content: space-between; align-items: center; gap: 15px; padding: 27px 0 32px; color: #8492ab; font-size: 8px; }
 .site-footer > span:first-child { font-weight: 600; letter-spacing: 1.4px; }
 .site-footer > span:last-child { font-size: 9px; }
 .site-footer > span > span { margin-left: 5px; color: var(--pink); }
 
-/* Dialogs and overlays */
+/* Race overlays */
 .countdown-overlay, .paused-overlay, .winner-overlay { position: absolute; inset: 0; display: flex; align-items: center; justify-content: center; flex-direction: column; }
 .countdown-overlay { background: #e9f2ee38; pointer-events: none; }
 .countdown-overlay > span { font-family: var(--display); font-size: 110px; font-weight: 800; font-style: italic; line-height: 1; color: #b037ab; text-shadow: 0 3px 0 #fff, 0 0 20px #ff30b923; animation: pop .8s ease-out; }
@@ -366,16 +293,6 @@ h2 { margin: 0; font-family: var(--display); font-weight: 800; font-style: itali
 .podium-person .racer-avatar { width: 29px; height: 29px; }
 .podium-person small { color: #a196b6; font-size: 8px; }
 .winner-card .racer-avatar { margin: auto; }
-.how-dialog { max-width: 500px; width: calc(100% - 32px); padding: 35px; border: 1px solid #45405a; border-radius: 20px; background: #121521; color: #f1eefb; box-shadow: 0 20px 120px #0009; }
-.how-dialog::backdrop { background: #040611c9; backdrop-filter: blur(5px); }
-.how-dialog .eyebrow { color: var(--cyan); }
-.how-dialog h2 { margin: 15px 0; color: #fcf6ff; font-size: 35px; letter-spacing: .2px; }
-.how-dialog p { color: #adb8ce; font-size: 13px; line-height: 1.7; }
-.how-dialog p strong { color: #f0e8ff; }
-.dialog-tip { margin: 20px 0; padding: 15px; border: 1px solid #423655; border-radius: 9px; background: #211b2f; color: #c3b3de; font-size: 11px; line-height: 1.6; }
-.dialog-close { position: absolute; right: 14px; top: 13px; border: 0; background: transparent; color: #a79aba; font-size: 26px; }
-.dialog-close:hover { color: var(--pink); }
-.how-dialog .start-button { width: 100%; justify-content: space-between; }
 
 /* Expanded views retain the existing race dimensions. */
 .race-stage:fullscreen { aspect-ratio: auto; width: 100vw; height: 100vh; background: #e8f1ef; display: flex; align-items: center; justify-content: center; }
@@ -396,7 +313,6 @@ h2 { margin: 0; font-family: var(--display); font-weight: 800; font-style: itali
 @media (max-width: 1150px) {
   .page-shell { padding: 0 35px; }
   .game-layout { grid-template-columns: minmax(0, 1fr) 246px; gap: 17px; }
-  .room-tag { display: none; }
   .hero-badge { width: 205px; padding: 16px 18px; }
   .hero-badge-main { font-size: 23px; }
   .lineup-heading { padding: 21px 17px 0; }
@@ -417,11 +333,9 @@ h2 { margin: 0; font-family: var(--display); font-weight: 800; font-style: itali
 }
 @media (max-width: 850px) {
   .page-shell { padding: 0 24px; }
-  .site-header { height: 92px; }
-  .header-tag { display: none; }
   .hero { padding: 32px 0; }
   .hero-badge { width: 190px; }
-  .hero h1 { font-size: 57px; }
+  .hero h1 { font-size: clamp(42px, 6.5vw, 57px); }
   .game-layout { grid-template-columns: 1fr; }
   .lineup-card { margin-top: 5px; }
   .racer-list { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 4px 8px; min-height: 0; max-height: 230px; padding: 0 12px 14px; }
@@ -451,23 +365,17 @@ h2 { margin: 0; font-family: var(--display); font-weight: 800; font-style: itali
 }
 @media (max-width: 520px) {
   .page-shell { padding: 0 17px; }
-  .site-header { height: 85px; gap: 12px; }
-  .brand { gap: 8px; font-size: 26px; }
-  .brand-icon { width: 43px; height: 43px; }
-  .brand-main { font-size: 29px; }
-  .brand-slide { font-size: 25px; }
-  .text-button { font-size: 10px; gap: 5px; }
   .hero { padding: 30px 0 27px; }
-  .hero h1 { font-size: clamp(42px, 13vw, 49px); letter-spacing: 0; }
+  .hero h1 { font-size: clamp(32px, 9.5vw, 48px); letter-spacing: 0; }
   .hero p { font-size: 11px; line-height: 1.8; }
   .hero .eyebrow { font-size: 8px; }
   .race-toolbar { height: 48px; padding: 0 11px; }
   .room-label { font-size: 10px; gap: 7px; }
   .stage-controls { gap: 3px; }
   .race-stage { aspect-ratio: 1200 / 850; }
-  .stage-topline { top: 11px; left: 11px; right: 11px; }
-  .circuit-pill { font-size: 6px; padding: 5px 7px; }
-  .timer { font-size: 8px; padding: 4px 5px; }
+  .stage-topline { top: 6px; left: 7px; right: 7px; }
+  .timer { gap: 1px; padding: 5px 7px; font-size: 20px; border-radius: 7px; }
+  .timer-limit { font-size: 10px; }
   .ready-banner { display: none; }
   .ready-spark { font-size: 12px; }
   .stage-bottomline { bottom: 10px; left: 12px; right: 12px; font-size: 6px; letter-spacing: .5px; }
@@ -528,9 +436,6 @@ h2 { margin: 0; font-family: var(--display); font-weight: 800; font-style: itali
   .countdown-overlay > span { font-size: 80px; }
   .countdown-overlay > small { font-size: 10px; }
   .paused-overlay > span { font-size: 28px; }
-  .how-dialog { padding: 29px 24px 24px; }
-  .how-dialog .eyebrow { font-size: 8px; letter-spacing: 1.3px; }
-  .how-dialog h2 { font-size: 30px; }
 }
 @media (prefers-reduced-motion: reduce) {
   *, *::before, *::after { animation-duration: .001ms !important; transition-duration: .001ms !important; }
@@ -541,29 +446,20 @@ h2 { margin: 0; font-family: var(--display); font-weight: 800; font-style: itali
 </head>
 <body>
   <div class="page-shell">
-    <header class="site-header">
-      <a class="brand" href="" aria-label="Soap Slide home">
-        <svg class="brand-icon" viewBox="0 0 48 48" aria-hidden="true"><path d="M5 38Q10 32 16 38T28 38T42 38M13 29L8 19M24 26L27 9M35 29L43 21" fill="none" stroke="#4ac9ff" stroke-width="3.2" stroke-linecap="round"/><circle cx="12" cy="10" r="4" fill="#10131d" stroke="#b396ff" stroke-width="2"/><circle cx="38" cy="10" r="3" fill="#ff30be"/><path d="M17 44H33" stroke="#ff30be" stroke-width="2" stroke-linecap="round"/></svg>
-        <span class="brand-text"><span class="brand-main">SOAP</span><span class="brand-slide">SLIDE</span></span>
-      </a>
-      <span class="header-tag"><span class="tiny-star">✦</span> THE SLIPPERY GRAND PRIX</span>
-      <button id="how-button" class="text-button"><span class="help-icon">?</span> How to play</button>
-    </header>
-
     <main>
       <section class="hero" aria-labelledby="page-title">
         <div class="hero-copy">
           <div class="eyebrow"><span></span> GOOD, CLEAN CHAOS</div>
-          <h1 id="page-title">Ready. Set. <span>Slip.</span><svg viewBox="0 0 170 14" aria-hidden="true"><path d="M3 10 Q 80 -3 166 8" fill="none" stroke="#c1abf4" stroke-width="5" stroke-linecap="round"/></svg></h1>
+          <h1 id="page-title"><span class="title-owner">The Kyle’s</span><span class="title-race">Power Shower Race</span></h1>
           <p>A slippery floor. A surprise comeback. One very unlikely champion.<br>Set up your lineup, start the race, and watch the chaos unfold.</p>
         </div>
-        <div class="hero-badge"><span class="hero-badge-kicker">THE SHOWER CIRCUIT</span><strong class="hero-badge-main">ALL LUCK.<br>ALL CHAOS.</strong><span class="hero-badge-sub">2–10 racers · 20 looks</span></div>
+        <div class="hero-badge"><span class="hero-badge-kicker">THE SHOWER CIRCUIT</span><strong class="hero-badge-main">ALL LUCK.<br>ALL CHAOS.</strong><span class="hero-badge-sub">2–10 racers</span></div>
       </section>
 
-      <section class="game-layout" aria-label="Soap Slide game">
+      <section class="game-layout" aria-label="The Kyle’s Power Shower Race game">
         <div class="race-column">
           <div class="race-toolbar">
-            <div class="room-label"><span class="live-dot"></span><strong>The shower circuit</strong><span class="room-tag">100 M OF MAYHEM</span></div>
+            <div class="room-label"><span class="room-tag">100 M OF MAYHEM</span></div>
             <div class="stage-controls">
               <button id="pause-button" class="icon-button hidden" aria-label="Pause race" title="Pause race"><svg viewBox="0 0 20 20" aria-hidden="true"><path d="M7 4v12M13 4v12" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"/></svg></button>
               <button id="speed-button" class="speed-button" aria-label="Race playback speed">1×</button>
@@ -574,7 +470,7 @@ h2 { margin: 0; font-family: var(--display); font-weight: 800; font-style: itali
 
           <div id="race-stage" class="race-stage">
             <canvas id="race-canvas" width="1200" height="650" role="img" aria-label="Adult cartoon racers run left to right, losing speed as they skid, spin, windmill their arms, do the splits, and slide across a white tiled shower room. Racers repeatedly swap places. Opaque foam covers their hips, with light steam above them. Above the back wall, a Kyle in the Shower portrait and neon lettering travel with the racers."></canvas>
-            <div class="stage-topline"><span class="circuit-pill"><span>✦</span> BUBBLE BATH CLUB</span><span id="race-time" class="timer">00:00.0</span></div>
+            <div class="stage-topline"><div class="timer" role="timer" aria-label="Elapsed race time and selected duration"><span id="race-time" class="timer-elapsed">00:00.0</span><span id="race-time-limit" class="timer-limit">/ 0:30</span></div></div>
             <div id="ready-banner" class="ready-banner"><span class="ready-spark">✦</span><span>Slippery when racing.</span><span class="ready-spark">✦</span></div>
             <div id="countdown-overlay" class="countdown-overlay hidden" aria-live="polite"><span id="countdown-number">3</span><small>WATCH YOUR STEP</small></div>
             <div id="paused-overlay" class="paused-overlay hidden"><span>Taking a breather.</span><button id="resume-button">Resume race <span>→</span></button></div>
@@ -597,7 +493,7 @@ h2 { margin: 0; font-family: var(--display); font-weight: 800; font-style: itali
           <div class="below-stage"><span><svg viewBox="0 0 16 16" aria-hidden="true"><path d="M2 4h3l6 8h3m-3-9h3v3m-12 6h3l6-8h3m-3 6h3v3" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"/></svg>Every race. A random winner.</span><span>Foam coverage: <strong>100%</strong> <span class="mini-bubble">○</span></span></div>
         </div>
 
-        <aside class="lineup-card" aria-labelledby="lineup-title"><div class="lineup-heading"><div><span class="eyebrow">MEET THE SUDS</span><h2 id="lineup-title">The lineup<span id="lineup-count">08</span></h2></div><svg class="lineup-soap" viewBox="0 0 48 48" aria-hidden="true"><path d="M5 37Q11 31 17 37T29 37T43 37M14 28L9 18M24 26L27 10M35 28L42 20" fill="none" stroke="#4ac9ff" stroke-width="2.5" stroke-linecap="round"/><circle cx="12" cy="9" r="3" fill="#10131d" stroke="#b396ff"/><circle cx="38" cy="9" r="2" fill="#ff30be"/><path d="M16 43H33" stroke="#b396ff" stroke-width="2" stroke-linecap="round"/></svg></div>
+        <aside class="lineup-card" aria-labelledby="lineup-title"><div class="lineup-heading"><h2 id="lineup-title">The lineup<span id="lineup-count">08</span></h2></div>
           <p class="lineup-description" id="lineup-description">Name your racers. Mix up the starting line.</p>
           <div class="lineup-customize"><div class="character-pool-control"><label for="character-pool">CHARACTER LOOKS</label><select id="character-pool" aria-label="Number of available character looks"><option value="1">1 look</option><option value="2">2 looks</option><option value="3">3 looks</option><option value="4">4 looks</option><option value="5">5 looks</option><option value="6">6 looks</option><option value="7">7 looks</option><option value="8">8 looks</option><option value="9">9 looks</option><option value="10">10 looks</option><option value="11">11 looks</option><option value="12">12 looks</option><option value="13">13 looks</option><option value="14">14 looks</option><option value="15">15 looks</option><option value="16">16 looks</option><option value="17">17 looks</option><option value="18">18 looks</option><option value="19">19 looks</option><option value="20" selected>20 looks</option></select></div><div class="lineup-actions"><button id="randomize-characters" class="small-button"><svg viewBox="0 0 16 16" aria-hidden="true"><path d="M12 5A5 5 0 0 0 3 4M4 2L3 4l3 1M4 11a5 5 0 0 0 9 1m-3-1l3 1 1-3" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"/></svg>Randomize looks</button><button id="shuffle-order" class="small-button"><svg viewBox="0 0 16 16" aria-hidden="true"><path d="M2 4h3l6 8h3m-3-9h3v3m-12 6h3l6-8h3m-3 6h3v3" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"/></svg>Randomize order</button></div></div>
           <div id="racer-list" class="racer-list" aria-label="Racers and live standings"></div>
@@ -610,7 +506,6 @@ h2 { margin: 0; font-family: var(--display); font-weight: 800; font-style: itali
     <footer class="site-footer"><span>A LITTLE SLIP. A LOT OF NONSENSE.</span><span>Made for good, clean fun <span>✦</span></span></footer>
   </div>
 
-  <dialog id="how-dialog" class="how-dialog"><button id="close-dialog" class="dialog-close" aria-label="Close instructions">×</button><div class="eyebrow">WELCOME TO THE SHOWER CIRCUIT</div><h2>Let the good times slide.</h2><p>Choose <strong>2–10 adult cartoon racers</strong> with the + and − buttons. Click each name in the lineup to edit it. There are <strong>20 different character looks</strong> to choose from: click <strong>Randomize looks</strong> to assign appearances, or <strong>Randomize order</strong> to rearrange the starting line.</p><p>Set <strong>Race length</strong> from <strong>1 to 90 seconds</strong> (1 minute 30 seconds). The three-second countdown comes first; all racers finish within your selected race time. At 2× playback, the race plays twice as fast.</p><p>Hit <strong>Start the race</strong>, then sit back and watch. Racers skid, spin, windmill their arms, do the splits, and slide on their bellies or backs—all on their own. Every slip slows a racer down, so the standings keep changing right up to the finish. The winner is randomized each race; names, looks, starting order, and race length do not affect anyone's chance of winning.</p><div class="dialog-tip">Use <strong>Space</strong> to start or pause the whole race. Use <strong>R</strong> to race again.</div><button id="dialog-play" class="start-button">Got it. Let's slip. <span>→</span></button></dialog>
   <div id="announcement" class="sr-only" aria-live="polite" aria-atomic="true"></div>
   <script type="module">
 const { RaceEngine, RACER_NAMES } = (() => {
@@ -1101,7 +996,7 @@ const clamp = value => Math.max(0, Math.min(1, value));
 const mix = (a, b, amount) => a + (b - a) * amount;
 const smooth = value => { const p = clamp(value); return p * p * (3 - 2 * p); };
 const pointMix = (a, b, amount) => [mix(a[0], b[0], amount), mix(a[1], b[1], amount)];
-const OUTLINE = '#38313b';
+const OUTLINE = '#483c43';
 
 function tint(hex, amount) {
   const value = Number.parseInt(hex.slice(1), 16);
@@ -1124,57 +1019,72 @@ function stroke(ctx, points, color, width = 1) {
   ctx.lineCap = 'round'; ctx.lineJoin = 'round'; ctx.stroke();
 }
 
-function segment(ctx, from, to, startWidth, endWidth, skin, behind = false) {
-  const dx = to[0] - from[0], dy = to[1] - from[1];
-  const length = Math.hypot(dx, dy) || 1;
-  const nx = -dy / length, ny = dx / length;
-  const a = startWidth / 2, b = endWidth / 2;
-  const gradient = ctx.createLinearGradient(from[0] - nx * a, from[1] - ny * a, from[0] + nx * a, from[1] + ny * a);
-  gradient.addColorStop(0, tint(skin, behind ? -.12 : .1));
-  gradient.addColorStop(.65, tint(skin, behind ? -.06 : .1));
-  gradient.addColorStop(.7, tint(skin, behind ? -.2 : -.1));
-  gradient.addColorStop(1, tint(skin, behind ? -.2 : -.1));
-  ctx.beginPath();
-  ctx.moveTo(from[0] - nx * a, from[1] - ny * a);
-  ctx.lineTo(to[0] - nx * b, to[1] - ny * b);
-  ctx.quadraticCurveTo(to[0] + dx / length * b, to[1] + dy / length * b, to[0] + nx * b, to[1] + ny * b);
-  ctx.lineTo(from[0] + nx * a, from[1] + ny * a);
-  ctx.quadraticCurveTo(from[0] - dx / length * a, from[1] - dy / length * a, from[0] - nx * a, from[1] - ny * a);
-  ctx.closePath(); ctx.fillStyle = gradient; ctx.fill();
-  ctx.strokeStyle = OUTLINE; ctx.lineWidth = 1.65; ctx.stroke();
-}
+const delta = (a, b) => [b[0] - a[0], b[1] - a[1]];
+const plus = (a, b, factor = 1) => [a[0] + b[0] * factor, a[1] + b[1] * factor];
+const unit = vector => { const length = Math.hypot(...vector) || 1; return vector.map(n => n / length); };
+const normal = vector => { const [x, y] = unit(vector); return [-y, x]; };
 
-function limb(ctx, points, widths, skin, behind = false) {
-  segment(ctx, points[0], points[1], widths[0], widths[1], skin, behind);
-  segment(ctx, points[1], points[2], widths[1], widths[2], skin, behind);
-  oval(ctx, points[1][0], points[1][1], widths[1] / 2, widths[1] / 2, tint(skin, behind ? -.10 : .035));
+// A limb is one continuous silhouette. The curved shoulder, elbow and wrist
+// share an outline, instead of looking like separately hinged tubes.
+function limb(ctx, [root, joint, tip], widths, skin, behind = false, leg = false) {
+  const upper = delta(root, joint), lower = delta(joint, tip);
+  const a = normal(upper), b = normal(lower), middle = unit(plus(a, b));
+  const radii = widths.map(width => width * .5);
+  const side = (point, vector, radius) => plus(point, vector, radius);
+  const bendRadius = radii[1] / Math.max(.72, a[0] * middle[0] + a[1] * middle[1]);
+  const gradient = ctx.createLinearGradient(root[0] - 13, root[1] - 4, tip[0] + 12, tip[1] + 7);
+  gradient.addColorStop(0, tint(skin, behind ? -.08 : .18));
+  gradient.addColorStop(.44, tint(skin, behind ? -.08 : .055));
+  gradient.addColorStop(1, tint(skin, behind ? -.23 : -.14));
+  const upperInset = plus(joint, upper, -.18), lowerInset = plus(joint, lower, .19);
+  ctx.beginPath(); ctx.moveTo(...side(root, a, radii[0]));
+  ctx.bezierCurveTo(...side(plus(root, upper, .31), a, radii[0] * 1.08),
+    ...side(plus(root, upper, .65), a, radii[1] * 1.12), ...side(upperInset, a, radii[1]));
+  ctx.quadraticCurveTo(...side(joint, middle, bendRadius), ...side(lowerInset, b, radii[1]));
+  ctx.bezierCurveTo(...side(plus(joint, lower, .35), b, leg ? radii[1] * 1.25 : radii[1]),
+    ...side(plus(joint, lower, .76), b, radii[2] * 1.23), ...side(tip, b, radii[2]));
+  ctx.quadraticCurveTo(...plus(tip, unit(lower), radii[2] * .55), ...side(tip, b, -radii[2]));
+  ctx.bezierCurveTo(...side(plus(joint, lower, .76), b, -radii[2] * 1.23),
+    ...side(plus(joint, lower, .35), b, -(leg ? radii[1] * 1.25 : radii[1])), ...side(lowerInset, b, -radii[1]));
+  ctx.quadraticCurveTo(...side(joint, middle, -bendRadius), ...side(upperInset, a, -radii[1]));
+  ctx.bezierCurveTo(...side(plus(root, upper, .65), a, -radii[1] * 1.12),
+    ...side(plus(root, upper, .31), a, -radii[0] * 1.08), ...side(root, a, -radii[0]));
+  // The proximal edge is deliberately unstroked. Its skin joins the torso
+  // under the deltoid rather than drawing a seam across the shoulder.
+  ctx.fillStyle = gradient; ctx.fill();
+  ctx.strokeStyle = OUTLINE; ctx.lineWidth = 1.45; ctx.lineJoin = 'round'; ctx.stroke();
+  // A short crease describes the joint without drawing a mechanical ring.
+  const crease = plus(joint, middle, -radii[1] * .48);
+  stroke(ctx, [plus(crease, unit(upper), -1.2), plus(crease, unit(lower), 2.5)], tint(skin, -.22), .65);
 }
 
 function foot(ctx, position, skin, behind = false) {
   ctx.save(); ctx.translate(...position);
   const gradient = ctx.createLinearGradient(-6, -9, 17, 2);
   gradient.addColorStop(0, tint(skin, behind ? -.1 : .12)); gradient.addColorStop(1, tint(skin, -.17));
-  ctx.beginPath(); ctx.moveTo(-7, 0); ctx.quadraticCurveTo(-8, -5, -3, -12);
-  ctx.lineTo(4, -10); ctx.quadraticCurveTo(6, -4, 15, -4);
-  ctx.quadraticCurveTo(22, -3, 20, 1); ctx.quadraticCurveTo(9, 5, -5, 3); ctx.closePath();
-  ctx.fillStyle = gradient; ctx.fill(); ctx.strokeStyle = OUTLINE; ctx.lineWidth = 1.65; ctx.stroke();
-  stroke(ctx, [[12, -2], [12.5, 1.3]], tint(skin, -.35), .9);
-  stroke(ctx, [[16, -2], [16.5, 1]], tint(skin, -.35), .9);
+  ctx.beginPath(); ctx.moveTo(-6, 1); ctx.quadraticCurveTo(-8, -4, -3, -10);
+  ctx.lineTo(4, -9); ctx.quadraticCurveTo(6, -3, 13, -3);
+  ctx.quadraticCurveTo(20, -3, 18, 1); ctx.quadraticCurveTo(8, 4, -4, 3); ctx.closePath();
+  ctx.fillStyle = gradient; ctx.fill(); ctx.strokeStyle = OUTLINE; ctx.lineWidth = 1.4; ctx.stroke();
+  stroke(ctx, [[11.5, -1.5], [12, .7]], tint(skin, -.25), .65);
+  stroke(ctx, [[15, -1.2], [15.3, .5]], tint(skin, -.25), .65);
   ctx.restore();
 }
 
-function hand(ctx, position, skin, startled = false) {
-  ctx.save(); ctx.translate(...position); ctx.rotate(startled ? -.5 : .1);
-  oval(ctx, 0, 0, 4.9, 6.6, tint(skin, .08), OUTLINE, 1.2);
-  if (startled) {
-    for (let finger = 0; finger < 3; finger++) {
-      stroke(ctx, [[-2.4 + finger * 2.1, 2], [-3.1 + finger * 2.8, 8 + finger % 2]], tint(skin, -.1), 2.2);
-    }
-    stroke(ctx, [[3, -1], [6, 2]], tint(skin, .01), 2.5);
-  } else {
-    stroke(ctx, [[-2, 2], [2, 2]], tint(skin, -.15), .6);
-    oval(ctx, 3, -.5, 2, 3, skin);
-  }
+function hand(ctx, position, elbow, skin, startled = false, behind = false) {
+  const direction = delta(elbow, position);
+  ctx.save(); ctx.translate(...position); ctx.rotate(Math.atan2(direction[1], direction[0]) - Math.PI * .5);
+  const fill = ctx.createLinearGradient(-4, -2, 5, 9);
+  fill.addColorStop(0, tint(skin, behind ? -.08 : .14)); fill.addColorStop(1, tint(skin, behind ? -.17 : -.08));
+  // Fingers form a softly grouped contour, with a separate curved thumb.
+  ctx.beginPath(); ctx.moveTo(-3, -3); ctx.quadraticCurveTo(-5, 0, -4.7, 4.8);
+  ctx.quadraticCurveTo(-4.2, 9.3, -2.2, 9.2); ctx.quadraticCurveTo(-.5, 10.5, .8, 9.2);
+  ctx.quadraticCurveTo(3, 9, 3.2, 6); ctx.lineTo(3.5, 2.4);
+  ctx.quadraticCurveTo(6.4, 5.1, 6.6, 2.3); ctx.quadraticCurveTo(6.6, .3, 3.1, -2.2);
+  ctx.lineTo(2.9, -3); ctx.closePath(); ctx.fillStyle = fill; ctx.fill();
+  ctx.strokeStyle = OUTLINE; ctx.lineWidth = 1.1; ctx.stroke();
+  stroke(ctx, [[-2, 4.4], [-1.8, 8]], tint(skin, -.22), .6);
+  stroke(ctx, [[.5, 4.6], [.4, 8]], tint(skin, -.22), .6);
   ctx.restore();
 }
 
@@ -1217,39 +1127,62 @@ function torsoPoint(pose, [x, y]) {
 }
 
 function attachShoulders(pose) {
-  pose.frontShoulder = torsoPoint(pose, [21, -64]);
-  pose.backShoulder = torsoPoint(pose, [-20, -63]);
+  pose.frontShoulder = torsoPoint(pose, [23, -63]);
+  pose.backShoulder = torsoPoint(pose, [-22, -63]);
+  for (const side of ['front', 'back']) {
+    const shoulder = pose[`${side}Shoulder`], target = pose[`${side}Hand`];
+    const direction = unit(delta(shoulder, target));
+    const reach = Math.min(57, Math.max(8, Math.hypot(...delta(shoulder, target))));
+    const upper = 30.5, lower = 28;
+    const along = (upper * upper - lower * lower + reach * reach) / (2 * reach);
+    const across = Math.sqrt(Math.max(0, upper * upper - along * along));
+    const center = plus(shoulder, direction, along), perpendicular = normal(direction);
+    // A fixed bend side prevents an interpolated elbow hint from jumping to
+    // the opposite IK solution halfway through a recovery animation.
+    pose[`${side}Elbow`] = plus(center, perpendicular, across * (pose[`${side}Bend`] || 1));
+    pose[`${side}Hand`] = plus(shoulder, direction, reach);
+  }
   return pose;
 }
 
 function uprightPose(t, running = false, celebrating = false) {
-  const stride = Math.sin(t * 11.8), breathe = Math.sin(t * 2.2);
-  const bounce = celebrating ? Math.abs(Math.sin(t * 5.8)) * 7 : running ? Math.abs(stride) * 5 : breathe;
+  const stride = Math.sin(t * 9.6), breathe = Math.sin(t * 2.2);
+  const bounce = celebrating ? Math.abs(Math.sin(t * 5.8)) * 5 : running ? Math.abs(stride) * 3.4 : breathe * .65;
   const pose = {
-    hip: [0, -94 - bounce], angle: running ? .14 + Math.cos(t * 11.8) * .04 : .025,
-    backKnee: [-15, -47], frontKnee: [15, -46],
-    backFoot: [-15, -2], frontFoot: [16, -2],
+    hip: [0, -92 - bounce], angle: running ? .11 + Math.cos(t * 9.6) * .025 : .015,
+    backKnee: [-11, -46], frontKnee: [14, -46],
+    backFoot: [-13, -2], frontFoot: [16, -2],
     startled: 0, celebrating, squashX: 1, dizzy: 0,
+    frontBend: running || celebrating ? 1 : -1, backBend: 1,
   };
   if (running) {
-    pose.backFoot = [-13 - stride * 29, -2 - Math.max(0, stride) * 25];
-    pose.frontFoot = [14 + stride * 31, -2 - Math.max(0, -stride) * 24];
-    pose.backKnee = [-14 - stride * 16, -46 - Math.max(0, stride) * 11];
-    pose.frontKnee = [15 + stride * 17, -47 - Math.max(0, -stride) * 11];
+    pose.backFoot = [-7 - stride * 29, -2 - Math.max(0, stride) ** 1.5 * 24];
+    pose.frontFoot = [9 + stride * 29, -2 - Math.max(0, -stride) ** 1.5 * 24];
+    pose.backKnee = [-9 - stride * 13, -45 - Math.max(0, stride) * 13];
+    pose.frontKnee = [13 + stride * 14, -46 - Math.max(0, -stride) * 13];
   } else if (celebrating) {
     pose.frontFoot[1] -= bounce * .35; pose.backFoot[1] -= bounce * .35;
   }
-  const frontArm = celebrating ? [[38, -88], [33, -116]]
-    : running ? [[30 - stride * 18, -43], [36 - stride * 32, -60]] : [[30, -42], [37, -20]];
-  const backArm = celebrating ? [[-38, -88], [-36, -116]]
-    : running ? [[-29 + stride * 16, -42], [-26 + stride * 32, -57]] : [[-29, -42], [-26, -20]];
+  const runningArm = (side, angle) => {
+    const shoulder = [side > 0 ? 23 : -22, -63];
+    const elbow = plus(shoulder, [Math.sin(angle), Math.cos(angle)], 30.5);
+    const wrist = plus(elbow, [Math.sin(angle + 1.55), Math.cos(angle + 1.55)], 28);
+    return [elbow, wrist];
+  };
+  // Keep a nearly right-angle elbow while the whole arm pumps. The wrist
+  // stays over forty pixels from the shoulder throughout the cycle, rather
+  // than folding up into the chest as it changes direction.
+  const frontArm = celebrating ? [[39, -83], [35, -109]]
+    : running ? runningArm(1, .05 - stride * .48) : [[32, -36], [29 + breathe * .6, -10]];
+  const backArm = celebrating ? [[-39, -84], [-34, -109]]
+    : running ? runningArm(-1, .05 + stride * .48) : [[-29, -36], [-26 - breathe * .6, -11]];
   [pose.frontElbow, pose.frontHand] = frontArm.map(point => torsoPoint(pose, point));
   [pose.backElbow, pose.backHand] = backArm.map(point => torsoPoint(pose, point));
   return attachShoulders(pose);
 }
 
 function slipFrame(t, values) {
-  const pose = { ...uprightPose(t), startled: 1, ...values };
+  const pose = { ...uprightPose(t), startled: 1, frontBend: 1, ...values };
   [pose.frontElbow, pose.frontHand] = (values.frontArm || [[42, -75], [59, -96]])
     .map(point => torsoPoint(pose, point));
   [pose.backElbow, pose.backHand] = (values.backArm || [[-40, -76], [-57, -93]])
@@ -1261,6 +1194,18 @@ function blendPose(previous, next, progress) {
   const result = { ...next };
   for (const key of POSE_POINTS) result[key] = pointMix(previous[key], next[key], progress);
   for (const key of ['angle', 'startled', 'squashX', 'dizzy']) result[key] = mix(previous[key], next[key], progress);
+  for (const side of ['front', 'back']) {
+    const before = delta(previous[`${side}Shoulder`], previous[`${side}Hand`]);
+    const after = delta(next[`${side}Shoulder`], next[`${side}Hand`]);
+    const firstAngle = Math.atan2(before[1], before[0]);
+    const angleChange = Math.atan2(before[0] * after[1] - before[1] * after[0], before[0] * after[0] + before[1] * after[1]);
+    const direction = firstAngle + angleChange * progress;
+    const reach = mix(Math.hypot(...before), Math.hypot(...after), progress);
+    const shoulder = torsoPoint(result, [side === 'front' ? 23 : -22, -63]);
+    // Wrists travel around the shoulder instead of cutting through it on a
+    // straight line. That keeps recovery joints smooth and anatomically bent.
+    result[`${side}Hand`] = plus(shoulder, [Math.cos(direction), Math.sin(direction)], reach);
+  }
   return attachShoulders(result);
 }
 
@@ -1275,17 +1220,18 @@ function makePose(racer, time) {
   const warning = slipFrame(t, {
     hip: [-2, -90], angle: .26, frontFoot: [39, -2], backFoot: [-22, -8],
     frontKnee: [19, -44], backKnee: [-24, -48],
-    frontArm: [[42, -59], [57, -73]], backArm: [[-39, -58], [-48, -77]], startled: .65,
+    frontArm: [[42, -59], [57, -73]], backArm: [[-42, -50], [-53, -58]], startled: .65,
   });
   let frames;
   switch (racer.slipStyle) {
     case 'windmill': {
       const arms = (angle, side) => [
-        [side * 20 + Math.cos(angle) * 28, -64 + Math.sin(angle) * 28],
-        [side * 20 + Math.cos(angle) * 54, -64 + Math.sin(angle) * 54],
+        [side * 22 + Math.cos(angle) * 30, -63 + Math.sin(angle) * 30],
+        [side * 22 + Math.cos(angle) * 30 + Math.cos(angle + .72) * 27,
+          -63 + Math.sin(angle) * 30 + Math.sin(angle + .72) * 27],
       ];
-      const angle = p * TAU * 2.3;
-      const wobble = Math.sin(p * TAU * 2.2);
+      const angle = p * TAU * 1.35;
+      const wobble = Math.sin(p * TAU * 1.4);
       const flail = slipFrame(t, {
         hip: [wobble * 8, -88], angle: wobble * .31,
         frontFoot: [43, -2], backFoot: [-24, -2], frontKnee: [30, -44], backKnee: [-23, -50],
@@ -1315,8 +1261,8 @@ function makePose(racer, time) {
         hip: [Math.sin(turn) * 8, -90 + Math.sin(turn * 2) * 4], angle: Math.sin(turn) * .32,
         backKnee: [20 * Math.sin(turn), -48], frontKnee: [-24 * Math.sin(turn), -49],
         backFoot: [-7 + 27 * Math.sin(turn), -2], frontFoot: [7 - 27 * Math.sin(turn), -9],
-        frontArm: [[49, -64], [76, -61]], backArm: [[-47, -65], [-72, -57]],
-        squashX: .48 + Math.abs(Math.cos(turn)) * .52, dizzy: 1,
+        frontArm: [[43, -70], [62, -56]], backArm: [[-42, -72], [-60, -57]],
+        squashX: .86 + Math.abs(Math.cos(turn)) * .14, dizzy: 1,
       });
       frames = [[0, running], [.13, warning], [.28, turnPose], [.75, turnPose], [.9, warning], [1, running]];
       break;
@@ -1372,65 +1318,81 @@ function makePose(racer, time) {
 function drawTorso(ctx, character) {
   const { skin, style } = character, build = style.build || 1;
   ctx.save(); ctx.scale(build, 1);
-  const fill = ctx.createLinearGradient(-27, -44, 26, -44);
-  fill.addColorStop(0, tint(skin, -.15)); fill.addColorStop(.28, tint(skin, .19));
-  fill.addColorStop(.66, skin); fill.addColorStop(1, tint(skin, -.2));
-  ctx.beginPath(); ctx.moveTo(-14, 3); ctx.quadraticCurveTo(-19, -18, -20, -37);
-  ctx.quadraticCurveTo(-27, -52, -26, -62); ctx.quadraticCurveTo(-23, -70, -13, -70);
-  ctx.lineTo(-6, -76); ctx.lineTo(7, -76); ctx.lineTo(14, -70);
-  ctx.quadraticCurveTo(25, -70, 27, -61); ctx.quadraticCurveTo(26, -49, 22, -38);
-  ctx.quadraticCurveTo(20 + (build - 1) * 28, -20, 15, 3); ctx.closePath();
-  ctx.fillStyle = fill; ctx.fill(); ctx.strokeStyle = OUTLINE; ctx.lineWidth = 1.8; ctx.stroke();
-  // A little chest shading retains adult proportions under the cartoon contour.
-  ctx.strokeStyle = tint(skin, -.16); ctx.lineWidth = .9;
-  ctx.beginPath(); ctx.moveTo(-17, -65); ctx.quadraticCurveTo(-9, -68, -2, -65);
-  ctx.moveTo(3, -65); ctx.quadraticCurveTo(12, -68, 20, -63);
-  ctx.moveTo(-17, -49); ctx.quadraticCurveTo(-8, -44, -1, -49);
-  ctx.moveTo(3, -49); ctx.quadraticCurveTo(14, -44, 20, -48); ctx.stroke();
-  ctx.strokeStyle = tint(skin, -.12); ctx.lineWidth = .65;
-  ctx.beginPath(); ctx.moveTo(1, -44); ctx.quadraticCurveTo(-1, -27, 1, -14);
-  ctx.moveTo(-11, -30); ctx.quadraticCurveTo(-4, -26, -1, -29);
-  ctx.moveTo(3, -29); ctx.quadraticCurveTo(8, -26, 13, -30); ctx.stroke();
-  oval(ctx, -12, -53, 1.3, .9, tint(skin, -.21)); oval(ctx, 14, -53, 1.3, .9, tint(skin, -.21));
-  oval(ctx, 1, -14, 1, 1.7, tint(skin, -.23));
-  if (character.beard) {
-    stroke(ctx, [[-3, -60], [-1, -56], [1, -61], [3, -57], [5, -61]], character.hair + '55', .9);
-  }
+  const fill = ctx.createLinearGradient(-29, -43, 29, -35);
+  fill.addColorStop(0, tint(skin, -.12)); fill.addColorStop(.22, tint(skin, .18));
+  fill.addColorStop(.6, tint(skin, .05)); fill.addColorStop(1, tint(skin, -.16));
+  // A broad ribcage flows into the waist; the deltoids and trapezius share
+  // the same contour, so the arms read as part of a body in every pose.
+  ctx.beginPath(); ctx.moveTo(-16, 5);
+  ctx.bezierCurveTo(-18, -12, -19, -27, -23, -41);
+  ctx.bezierCurveTo(-29, -51, -33, -59, -28, -65);
+  ctx.bezierCurveTo(-21, -70, -11, -69, -7, -75);
+  ctx.lineTo(-6, -82); ctx.quadraticCurveTo(1, -85, 7, -81);
+  ctx.lineTo(8, -75); ctx.bezierCurveTo(13, -69, 22, -70, 30, -64);
+  ctx.bezierCurveTo(34, -58, 29, -49, 24, -40);
+  ctx.bezierCurveTo(19, -25, 21, -10, 17, 5); ctx.closePath();
+  ctx.fillStyle = fill; ctx.fill(); ctx.strokeStyle = OUTLINE; ctx.lineWidth = 1.5; ctx.stroke();
+  // Restrained anatomical cues survive small on-track sizes without making
+  // the racer look like a jointed mannequin or a collection of outlined abs.
+  ctx.strokeStyle = tint(skin, -.19); ctx.lineWidth = .9; ctx.lineCap = 'round';
+  ctx.beginPath(); ctx.moveTo(-20, -64); ctx.quadraticCurveTo(-10, -67, -3, -63);
+  ctx.moveTo(3, -63); ctx.quadraticCurveTo(12, -67, 23, -62);
+  ctx.moveTo(-21, -48); ctx.bezierCurveTo(-14, -43, -7, -42, -1, -46);
+  ctx.moveTo(4, -46); ctx.quadraticCurveTo(13, -41, 22, -47); ctx.stroke();
+  ctx.strokeStyle = tint(skin, -.13); ctx.lineWidth = .65;
+  ctx.beginPath(); ctx.moveTo(1, -42); ctx.quadraticCurveTo(-1, -32, 1, -25);
+  ctx.moveTo(-11, -31); ctx.quadraticCurveTo(-6, -28, -3, -29);
+  ctx.moveTo(5, -29); ctx.quadraticCurveTo(10, -27, 14, -31); ctx.stroke();
+  oval(ctx, 2, -14, .9, 1.35, tint(skin, -.24));
+  ctx.fillStyle = tint(skin, -.1); ctx.beginPath();
+  ctx.moveTo(-6, -78); ctx.quadraticCurveTo(0, -71, 8, -77);
+  ctx.lineTo(7, -72); ctx.quadraticCurveTo(1, -69, -5, -73); ctx.fill();
   ctx.restore();
 }
 
 function drawHead(ctx, character, pose, drawHair, drawFacialHair) {
   const { skin, hair, style } = character;
-  // The twenty hair silhouettes retain their identity through every comic pose.
-  ctx.save(); ctx.translate(2, -94); ctx.rotate(-pose.angle * .15);
-  ctx.scale(.9, .9); ctx.translate(0, 88);
-  const face = ctx.createLinearGradient(-14, -91, 15, -84);
-  face.addColorStop(0, tint(skin, -.12)); face.addColorStop(.43, tint(skin, .2)); face.addColorStop(1, tint(skin, -.07));
-  ctx.beginPath(); ctx.moveTo(-12, -96); ctx.quadraticCurveTo(-10, -107, 1, -104);
-  ctx.quadraticCurveTo(13, -103, 14, -92); ctx.lineTo(14, -89);
-  ctx.quadraticCurveTo(19, -86, 17, -84); ctx.lineTo(13, -83);
-  ctx.quadraticCurveTo(14, -77, 9, -74); ctx.quadraticCurveTo(2, -70, -5, -75);
-  ctx.quadraticCurveTo(-12, -79, -12, -88); ctx.closePath();
-  ctx.fillStyle = face; ctx.fill(); ctx.strokeStyle = OUTLINE; ctx.lineWidth = 1.7; ctx.stroke();
-  oval(ctx, -11.5, -86.5, 3.3, 5, skin, OUTLINE, 1.2);
-  stroke(ctx, [[-12, -89], [-10.5, -87], [-12, -84.5]], tint(skin, -.22), .8);
+  // Hair and facial-hair callbacks use the same local landmarks for all
+  // twenty adult faces. A steadier gaze replaces the old oversized eyes.
+  ctx.save(); ctx.translate(2, -92); ctx.rotate(-pose.angle * .2);
+  ctx.scale(1.01, 1.01); ctx.translate(0, 88);
+  const face = ctx.createLinearGradient(-14, -93, 16, -81);
+  face.addColorStop(0, tint(skin, -.06)); face.addColorStop(.42, tint(skin, .2)); face.addColorStop(1, tint(skin, -.07));
+  ctx.beginPath(); ctx.moveTo(-12, -96);
+  ctx.bezierCurveTo(-12, -103, -6, -106, 1, -105);
+  ctx.bezierCurveTo(11, -105, 15, -100, 14, -92);
+  ctx.lineTo(13.5, -89); ctx.quadraticCurveTo(15, -87.5, 17.1, -85.3);
+  ctx.quadraticCurveTo(18.2, -83.3, 13.5, -82.7);
+  ctx.lineTo(13, -78); ctx.quadraticCurveTo(11, -73, 6, -72.4);
+  ctx.quadraticCurveTo(-1, -71.3, -6, -76.2);
+  ctx.quadraticCurveTo(-12, -81, -12, -89); ctx.closePath();
+  ctx.fillStyle = face; ctx.fill(); ctx.strokeStyle = OUTLINE; ctx.lineWidth = 1.35; ctx.stroke();
+  oval(ctx, -11.7, -87, 3.2, 4.7, tint(skin, .015), OUTLINE, .9);
+  ctx.strokeStyle = tint(skin, -.24); ctx.lineWidth = .7;
+  ctx.beginPath(); ctx.moveTo(-12.5, -89); ctx.quadraticCurveTo(-9, -90, -11.4, -84.4); ctx.stroke();
   drawHair?.(character);
   const surprise = pose.startled;
-  oval(ctx, 6.1, -89.8, 4.1 + surprise * .6, 3.1 + surprise * 1.8, '#fffdf8', OUTLINE, .85);
-  oval(ctx, 7.3 - pose.dizzy * 1.3, -89.3 + pose.dizzy, 1.8, 2 + surprise * .5, '#34323d');
-  oval(ctx, 7.6, -90.2, .65, .75, '#fff');
-  oval(ctx, -2.2, -90.3, 2.6, 2.7 + surprise, '#fffdf8', OUTLINE, .75);
-  oval(ctx, -1.2 + pose.dizzy, -90, 1.3, 1.9, '#34323d');
-  ctx.strokeStyle = hair; ctx.lineWidth = Math.min(2, style.browWidth || 1.5); ctx.lineCap = 'round';
-  ctx.beginPath(); ctx.moveTo(2.4, -94 - surprise * 3);
-  ctx.quadraticCurveTo(6, -96 - surprise * 3, 10, -94.6 - surprise * 1.5); ctx.stroke();
-  stroke(ctx, [[11.8, -89], [13.4, -84.8], [10.8, -84]], tint(skin, -.2), .7);
-  oval(ctx, 8, -83, 3.7, 2.2, tint(skin, .055));
+  const eyeHeight = 1.65 + surprise * .9;
+  oval(ctx, 6.6, -89.5, 3.3, eyeHeight, '#fff9f0', null);
+  oval(ctx, -2.2, -89.7, 2.1, eyeHeight * .85, '#fff9f0', null);
+  oval(ctx, 7.4 - pose.dizzy * .6, -89.2, 1.22, 1.45 + surprise * .2, '#3c3337');
+  oval(ctx, -1.5 + pose.dizzy * .4, -89.4, .95, 1.25, '#3c3337');
+  ctx.strokeStyle = OUTLINE; ctx.lineWidth = .9;
+  ctx.beginPath(); ctx.moveTo(3.3, -89.9); ctx.quadraticCurveTo(6.5, -92.4 - surprise, 9.8, -89.8);
+  ctx.moveTo(-4.3, -90); ctx.quadraticCurveTo(-2.1, -91.9 - surprise, -.2, -90); ctx.stroke();
+  ctx.strokeStyle = hair; ctx.lineWidth = Math.min(2, style.browWidth || 1.6); ctx.lineCap = 'round';
+  ctx.beginPath(); ctx.moveTo(3.2, -94 - surprise * 1.9);
+  ctx.quadraticCurveTo(6.4, -95.5 - surprise * 1.9, 10.2, -93.8 - surprise); ctx.stroke();
+  ctx.beginPath(); ctx.moveTo(-4.2, -94 - surprise * 1.3); ctx.lineTo(-.3, -94.5 - surprise); ctx.stroke();
+  ctx.strokeStyle = tint(skin, -.25); ctx.lineWidth = .7;
+  ctx.beginPath(); ctx.moveTo(11.5, -89); ctx.quadraticCurveTo(10.8, -85.7, 13.9, -84.8); ctx.stroke();
+  ctx.fillStyle = tint(skin, -.1); ctx.beginPath();
+  ctx.moveTo(10, -82.3); ctx.quadraticCurveTo(13.3, -80.5, 10, -78.5); ctx.quadraticCurveTo(8, -79.5, 10, -82.3); ctx.fill();
   drawFacialHair?.(character);
-  if (surprise > .18) oval(ctx, 8, -79, 2.9, 1.5 + surprise * 2.4, '#624752', OUTLINE, .9);
+  if (surprise > .3) oval(ctx, 7.1, -78.8, 2.1, 1.1 + surprise * 1.4, '#654b4e', OUTLINE, .65);
   else {
-    ctx.strokeStyle = tint(skin, -.35); ctx.lineWidth = .9;
-    ctx.beginPath(); ctx.moveTo(4, -78.5); ctx.quadraticCurveTo(8, pose.celebrating ? -76 : -78, 11, -79.5); ctx.stroke();
+    ctx.strokeStyle = tint(skin, -.4); ctx.lineWidth = .8;
+    ctx.beginPath(); ctx.moveTo(3, -78.5); ctx.quadraticCurveTo(7.2, pose.celebrating ? -76.6 : -78, 10.7, -79.4); ctx.stroke();
   }
   ctx.restore();
 }
@@ -1458,6 +1420,8 @@ function drawSlipMotion(ctx, racer, pose) {
 /** Adult cartoon anatomy in local coordinates, with the floor at y = 0. */
 class RacerModel {
   static height = 215;
+  // Bounds of the relaxed starting pose, in unscaled local coordinates.
+  static startBounds = Object.freeze({ left: -44, right: 44, toe: 34 });
 
   static hand(racer, { time = 0 } = {}) {
     const pose = makePose(racer, time);
@@ -1485,21 +1449,18 @@ class RacerModel {
     ctx.scale(pose.squashX, 1);
     const backHip = [pose.hip[0] - 10 * build, pose.hip[1] + 4];
     const frontHip = [pose.hip[0] + 10 * build, pose.hip[1] + 4];
-    limb(ctx, [backHip, pose.backKnee, pose.backFoot], [17 * build, 10, 6], skin, true);
+    limb(ctx, [backHip, pose.backKnee, pose.backFoot], [21 * build, 12.5, 7], skin, true, true);
     foot(ctx, pose.backFoot, skin, true);
-    limb(ctx, [pose.backShoulder, pose.backElbow, pose.backHand], [12 * build, 9, 5.4], skin, true);
-    hand(ctx, pose.backHand, skin, pose.startled > .2);
-    limb(ctx, [frontHip, pose.frontKnee, pose.frontFoot], [18 * build, 10.5, 6.5], skin);
+    limb(ctx, [pose.backShoulder, pose.backElbow, pose.backHand], [15.5 * build, 10, 6.3], skin, true);
+    hand(ctx, pose.backHand, pose.backElbow, skin, pose.startled > .2, true);
+    limb(ctx, [frontHip, pose.frontKnee, pose.frontFoot], [22 * build, 13, 7.5], skin, false, true);
     foot(ctx, pose.frontFoot, skin);
-    // Kneecap highlights and a calf ridge give the long legs readable volume.
-    oval(ctx, pose.frontKnee[0] + 1, pose.frontKnee[1] - .5, 3.5, 2.5, tint(skin, .13));
     ctx.save(); ctx.translate(...pose.hip); ctx.rotate(pose.angle);
     drawTorso(ctx, character);
-    segment(ctx, [0, -71], [1, -83], 11, 10, skin);
     drawHead(ctx, character, pose, drawHair, drawFacialHair);
     ctx.restore();
-    limb(ctx, [pose.frontShoulder, pose.frontElbow, pose.frontHand], [12.5 * build, 9, 5.5], skin);
-    hand(ctx, pose.frontHand, skin, pose.startled > .2);
+    limb(ctx, [pose.frontShoulder, pose.frontElbow, pose.frontHand], [16 * build, 10.5, 6.5], skin);
+    hand(ctx, pose.frontHand, pose.frontElbow, skin, pose.startled > .2);
     drawFoam(ctx, pose, build);
     ctx.restore();
   }
@@ -1512,7 +1473,8 @@ const RaceRenderer = (() => {
 
 const TAU = Math.PI * 2;
 const TRACK_LENGTH = 3300;
-const START_X = 165;
+const START_X = 245;
+const START_SETBACK = 80;
 const SLIP_EXCLAMATIONS = {
   skid: 'whoa!', windmill: 'steady…!', splits: 'yikes!',
   spin: 'woooah!', belly: 'splash!', backslide: 'whoops!',
@@ -1565,6 +1527,8 @@ class RaceRenderer {
     if (!bounds.width || !bounds.height) return;
     const dpr = Math.min(window.devicePixelRatio || 1, 2);
     this.cssWidth = bounds.width;
+    const timer = this.canvas.parentElement?.querySelector('.timer')?.getBoundingClientRect();
+    this.timerLeft = timer?.width ? (timer.left - bounds.left) / bounds.width * this.width : this.width;
     this.canvas.width = Math.round(bounds.width * dpr);
     this.canvas.height = Math.round(bounds.height * dpr);
     this.height = this.width * bounds.height / bounds.width;
@@ -1600,7 +1564,14 @@ class RaceRenderer {
   }
 
   racerWorldX(racer) {
-    return START_X + this.laneOffset(racerLane(racer)) + racer.x * TRACK_LENGTH;
+    // The whole figure waits behind the paint, then runs through the line.
+    // All lanes share the same approach and finish at the course finish line.
+    return START_X - START_SETBACK + this.laneOffset(racerLane(racer))
+      + racer.x * (TRACK_LENGTH + START_SETBACK);
+  }
+
+  startLineWorldX(y) {
+    return START_X + this.courseOffset(y);
   }
 
   racerScale(lane) {
@@ -1619,7 +1590,7 @@ class RaceRenderer {
         }
       }
       if (event.type === 'slip') {
-        const x = START_X + this.laneOffset(racerLane(racer)) + event.x * TRACK_LENGTH;
+        const x = this.racerWorldX({ ...racer, x: event.x });
         const y = this.laneY(racerLane(racer));
         if (!this.reducedMotion) {
           for (let i = 0; i < 9; i++) this.particles.push({ x: x + 5, y: y - 5, vx: (Math.random() - .65) * 110, vy: -25 - Math.random() * 65, life: .65, maxLife: .65, r: 2 + Math.random() * 3 });
@@ -1641,10 +1612,16 @@ class RaceRenderer {
     // The clamp keeps the complete portrait and wording in the upper banner.
     const packCenter = this.engine.racers.reduce((sum, racer) => sum + this.racerWorldX(racer), 0)
       / this.engine.count - this.camera;
-    const bannerLeft = this.width * (this.cssWidth <= 360 ? .50 : .42);
-    const bannerTarget = this.engine.state === 'racing' || this.engine.state === 'finished'
-      ? Math.max(bannerLeft, Math.min(this.width * .60, packCenter)) : this.width / 2;
+    const bannerLeft = this.width * (this.cssWidth <= 360 ? .34 : .42);
+    const imageWidth = (this.backWallTop() - 17)
+      * (this.brandImage.naturalWidth / this.brandImage.naturalHeight || 1.07);
+    const bannerRight = Math.max(bannerLeft, Math.min(this.width * .60,
+      this.timerLeft - imageWidth / 2 - this.width * .02));
+    const desiredBanner = this.engine.state === 'racing' || this.engine.state === 'finished'
+      ? packCenter : this.width / 2;
+    const bannerTarget = Math.max(bannerLeft, Math.min(bannerRight, desiredBanner));
     if (!paused) this.bannerX += (bannerTarget - this.bannerX) * Math.min(1, dt * 3);
+    this.bannerX = Math.max(bannerLeft, Math.min(bannerRight, this.bannerX));
     ctx.setTransform(this.scale, 0, 0, this.scale, 0, 0);
     ctx.clearRect(0, 0, this.width, this.height);
     this.drawRoom();
@@ -1793,11 +1770,11 @@ class RaceRenderer {
 
   drawCourse() {
     const ctx=this.ctx,h=this.height;
-    const start=START_X-40-this.camera,finish=START_X+TRACK_LENGTH-this.camera;
+    const start=START_X-this.camera,finish=START_X+TRACK_LENGTH-this.camera;
     const top=h*.49+14,bottom=h*.94;
     if(start+this.courseOffset(bottom)>-50){
-      ctx.save();ctx.globalAlpha=.5;ctx.strokeStyle='#86a999';ctx.lineWidth=3;ctx.setLineDash([7,8]);ctx.beginPath();ctx.moveTo(start+this.courseOffset(top),top);ctx.lineTo(start+this.courseOffset(bottom),bottom);ctx.stroke();ctx.restore();
-      ctx.save();ctx.translate(start+this.courseOffset(h*.77)-25,h*.77);ctx.rotate(-Math.PI/3);ctx.font='bold 13px Arial';ctx.fillStyle='#8cac9b';ctx.fillText('START',0,0);ctx.restore();
+      ctx.save();ctx.lineCap='butt';ctx.strokeStyle='#ffffff';ctx.lineWidth=13;ctx.beginPath();ctx.moveTo(start+this.courseOffset(top),top);ctx.lineTo(start+this.courseOffset(bottom),bottom);ctx.stroke();ctx.strokeStyle='#72b5c1';ctx.lineWidth=6;ctx.stroke();ctx.restore();
+      ctx.save();ctx.translate(start+this.courseOffset(h*.77)+24,h*.77);ctx.rotate(Math.atan2(bottom-top,this.courseOffset(bottom)-this.courseOffset(top)));ctx.font='bold 13px Arial';ctx.fillStyle='#497d8c';ctx.textAlign='center';ctx.fillText('START',0,0);ctx.restore();
     }
     for(let i=1;i<=3;i++){
       const x=START_X+i*TRACK_LENGTH/4+this.startingSpread()*.5-this.camera;
@@ -2354,7 +2331,8 @@ function updateUI() {
   $('start-button').disabled = racing;
   $('start-button').querySelector('span').textContent = racing ? (paused ? 'Race paused' : 'Race in progress') : engine.state === 'finished' ? 'Race again' : 'Start the race';
   $('pause-button').classList.toggle('hidden', !racing);
-  $('race-time').textContent = `${timeText(engine.elapsed)} / ${durationText(duration)}`;
+  $('race-time').textContent = timeText(engine.elapsed);
+  $('race-time-limit').textContent = `/ ${durationText(duration)}`;
   $('progress-fill').style.width = `${engine.progress * 100}%`;
   const status = engine.state === 'idle' ? 'RACERS AT THE READY' : paused ? 'A QUICK PIT STOP' : engine.state === 'countdown' ? 'ON YOUR MARKS…' : engine.state === 'finished' ? 'THAT’S A WRAP!' : engine.winner ? `${engine.winner.name.toUpperCase()} TAKES FIRST!` : 'SLIPS HAPPEN. KEEP GOING.';
   $('race-status').lastChild.textContent = ` ${status}`;
@@ -2433,17 +2411,9 @@ const exitExpanded = document.createElement('button');
 exitExpanded.className = 'stage-exit'; exitExpanded.textContent = '✕'; exitExpanded.setAttribute('aria-label', 'Exit expanded race view');
 exitExpanded.addEventListener('click', expandStage); $('race-stage').append(exitExpanded);
 
-const dialog = $('how-dialog');
-$('how-button').addEventListener('click', () => dialog.showModal());
-$('close-dialog').addEventListener('click', () => dialog.close());
-$('dialog-play').addEventListener('click', () => dialog.close());
-dialog.addEventListener('click', event => {
-  const bounds = dialog.getBoundingClientRect();
-  if (event.clientX < bounds.left || event.clientX > bounds.right || event.clientY < bounds.top || event.clientY > bounds.bottom) dialog.close();
-});
 document.addEventListener('keydown', event => {
   if (event.key === 'Escape') $('race-stage').classList.remove('expanded');
-  if (dialog.open || event.repeat || /^(INPUT|TEXTAREA|SELECT|BUTTON|A)$/.test(event.target.tagName)) return;
+  if (event.repeat || /^(INPUT|TEXTAREA|SELECT|BUTTON|A)$/.test(event.target.tagName)) return;
   if (event.code === 'Space') { event.preventDefault(); active() ? togglePause() : startRace(); }
   if (event.key.toLowerCase() === 'r' && !active()) startRace();
 });
