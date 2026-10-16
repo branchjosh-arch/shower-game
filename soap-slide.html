@@ -469,7 +469,7 @@ h2 { margin: 0; font-family: var(--display); font-weight: 800; font-style: itali
           </div>
 
           <div id="race-stage" class="race-stage">
-            <canvas id="race-canvas" width="1200" height="650" role="img" aria-label="Adult cartoon racers run left to right, losing speed as they skid, spin, windmill their arms, do the splits, and slide across a white tiled shower room. Racers repeatedly swap places. Opaque foam covers their hips, with light steam above them. Above the back wall, a Kyle in the Shower portrait and neon lettering travel with the racers."></canvas>
+            <canvas id="race-canvas" width="1200" height="650" role="img" aria-label="Adult cartoon racers run left to right with their custom names and numbers above them. Each racer slips or slides at least twice, slowing down while still moving forward across a white tiled shower room. Racers repeatedly swap places. Opaque foam covers their hips, with light steam above them. Above the back wall, a Kyle in the Shower portrait and neon lettering travel with the racers."></canvas>
             <div class="stage-topline"><div class="timer" role="timer" aria-label="Elapsed race time and selected duration"><span id="race-time" class="timer-elapsed">00:00.0</span><span id="race-time-limit" class="timer-limit">/ 0:30</span></div></div>
             <div id="ready-banner" class="ready-banner"><span class="ready-spark">✦</span><span>Slippery when racing.</span><span class="ready-spark">✦</span></div>
             <div id="countdown-overlay" class="countdown-overlay hidden" aria-live="polite"><span id="countdown-number">3</span><small>WATCH YOUR STEP</small></div>
@@ -723,7 +723,10 @@ class RaceEngine {
 
   #makePlan(finishTime) {
     const segments = [];
-    const cycles = Math.max(3, Math.round(finishTime / 4));
+    // Half as many mishaps as the original four-second cadence, with two
+    // guaranteed for even the shortest race.
+    const previousCycles = Math.max(3, Math.round(finishTime / 4));
+    const cycles = Math.max(2, Math.round(previousCycles / 2));
     const styles = [...SLIP_STYLES];
     for (let index = styles.length - 1; index > 0; index -= 1) {
       const other = Math.floor(this.#random() * (index + 1));
@@ -738,7 +741,9 @@ class RaceEngine {
       segments.push({
         phase: 'slip', style: styles[cycle % styles.length], duration: 0.65 + this.#random() * 0.9,
         entrySpeed: cruiseSpeeds[cycle], exitSpeed: cruiseSpeeds[cycle + 1],
-        slowSpeed: 0.035 + this.#random() * 0.13,
+        // A stumble costs ground while the racer keeps sliding forward.
+        slowSpeed: (cruiseSpeeds[cycle] + cruiseSpeeds[cycle + 1]) / 2
+          * (0.44 + this.#random() * 0.06),
       });
     }
     // Keep mishaps going almost to the line, followed by a short final scramble.
@@ -748,14 +753,22 @@ class RaceEngine {
       entrySpeed: cruiseSpeeds[cycles], exitSpeed: cruiseSpeeds[cycles],
     });
 
-    const rawDuration = segments.reduce((sum, segment) => sum + segment.duration, 0);
-    const timeScale = finishTime / rawDuration;
+    const rawSlipTime = segments.reduce((sum, segment) => sum
+      + (segment.phase === 'slip' ? segment.duration : 0), 0);
+    const rawRunTime = segments.reduce((sum, segment) => sum
+      + (segment.phase === 'run' ? segment.duration : 0), 0);
+    // Spend the freed-up time running. Stretching every segment to fit would
+    // double the remaining slips and leave racers stumbling just as often.
+    const slipTimeScale = Math.min(1, finishTime * 0.28 / rawSlipTime);
+    const runTimeScale = (finishTime - rawSlipTime * slipTimeScale) / rawRunTime;
+    for (const segment of segments) {
+      segment.duration *= segment.phase === 'slip' ? slipTimeScale : runTimeScale;
+    }
     const distanceScale = segments.reduce((sum, segment) => sum
-      + segment.duration * timeScale * segmentDistance(segment, 1), 0);
+      + segment.duration * segmentDistance(segment, 1), 0);
     let time = 0;
     let x = 0;
     for (const segment of segments) {
-      segment.duration *= timeScale;
       segment.start = time;
       segment.end = time + segment.duration;
       segment.startX = x;
@@ -1628,6 +1641,7 @@ class RaceRenderer {
     this.drawSteam();
     this.drawBrandBanner();
     this.drawCourse();
+    const visibleRacers = [];
     [...this.engine.racers].sort((a, b) => racerLane(a) - racerLane(b)).forEach(racer => {
       const x = this.racerWorldX(racer) - this.camera;
       const lane = racerLane(racer);
@@ -1636,11 +1650,14 @@ class RaceRenderer {
       if (x > -160 && x < this.width + 180) {
         this.drawSlideTrail(racer, x, y, scale);
         this.drawRacer(racer, x, y, scale);
+        if (x >= 0 && x <= this.width) visibleRacers.push({ racer, x, y, scale });
       }
       else if (x < -40) this.drawOffscreen(racer, y);
     });
     this.drawParticles(paused ? 0 : dt);
     this.drawForeground();
+    // Draw tags after every body so another racer cannot cover a name.
+    this.drawRacerLabels(visibleRacers);
     this.drawConfetti(paused ? 0 : dt);
   }
 
@@ -1837,14 +1854,85 @@ class RaceRenderer {
       drawHair: () => this.drawHair(character),
       drawFacialHair: () => this.drawFacialHair(character),
     });
-    // Numbers remain above the upright head, clear of hair and foam.
-    const lowSlide = racer.phase === 'slip' && ['belly', 'backslide', 'splits'].includes(racer.slipStyle);
-    const drop = lowSlide ? Math.sin((racer.phaseProgress || 0) * Math.PI) * 80 : 0;
-    const tagY = -RacerModel.height - 22 + drop;
-    ellipse(ctx,0,tagY,11,10,racer.color+'ed','#fffefa',1.5);
-    ctx.font='bold 9px Arial';ctx.textAlign='center';ctx.fillStyle='#fffefa';
-    ctx.fillText(String(racer.id+1).padStart(2,'0'),0,tagY+3);
     ctx.restore();ctx.textAlign='left';
+  }
+
+  layoutRacerLabels(visibleRacers) {
+    const ctx = this.ctx;
+    const fontSize = Math.round(Math.max(13, Math.min(22, 8 * this.width / (this.cssWidth || this.width))));
+    const height = fontSize + 10, gap = 3;
+    const font = `bold ${fontSize}px Arial`;
+    ctx.font = font;
+    this.labelCache ||= new Map();
+    const labels = visibleRacers.map(({ racer, x, y, scale }) => {
+      const name = racer.name || `Racer ${racer.id + 1}`;
+      const maxNameWidth = fontSize * (this.engine.count <= 4 ? 12 : 8);
+      const cacheKey = `${fontSize}:${maxNameWidth}:${name}`;
+      let measured = this.labelCache.get(racer.id);
+      if (measured?.key !== cacheKey) {
+        let displayName = name;
+        if (ctx.measureText(name).width > maxNameWidth) {
+          const letters = typeof Intl.Segmenter === 'function'
+            ? [...new Intl.Segmenter(undefined, { granularity: 'grapheme' }).segment(name)].map(part => part.segment)
+            : Array.from(name);
+          while (letters.length && ctx.measureText(letters.join('') + '…').width > maxNameWidth) letters.pop();
+          displayName = letters.join('') + '…';
+        }
+        measured = { key: cacheKey, displayName, textWidth: ctx.measureText(displayName).width };
+        this.labelCache.set(racer.id, measured);
+      }
+      const width = Math.ceil(height + measured.textWidth + 16);
+      const lowSlide = racer.phase === 'slip' && ['belly', 'backslide', 'splits'].includes(racer.slipStyle);
+      const drop = lowSlide ? Math.sin((racer.phaseProgress || 0) * Math.PI) * 80 * scale : 0;
+      const anchorY = y - (RacerModel.height + 9) * scale + drop;
+      return { racer, name, displayName: measured.displayName, font, fontSize, width, height,
+        anchorX: x, anchorY, left: Math.max(8, Math.min(this.width - width - 8, x - width / 2)),
+        top: Math.max(8, anchorY - height) };
+    });
+    const placed = [];
+    // Move crowded tags upward, keeping a short pointer to their own racer.
+    // A few horizontal alternatives prevent tall stacks at the edge of the view.
+    for (const label of labels.sort((a, b) => b.top - a.top || a.racer.id - b.racer.id)) {
+      const preferredLeft = label.left, preferredTop = label.top;
+      let best;
+      for (const offset of [0, -label.width * .65, label.width * .65, -label.width - gap, label.width + gap]) {
+        const left = Math.max(8, Math.min(this.width - label.width - 8, preferredLeft + offset));
+        let top = preferredTop;
+        let blocker;
+        do {
+          blocker = placed.find(other => left < other.left + other.width + gap
+            && left + label.width + gap > other.left
+            && top < other.top + other.height + gap && top + label.height + gap > other.top);
+          if (blocker) top = blocker.top - label.height - gap - .5;
+        } while (blocker && top >= 8);
+        if (top < 8) continue;
+        const cost = preferredTop - top + Math.abs(left - preferredLeft) * .6;
+        if (!best || cost < best.cost) best = { left, top, cost };
+      }
+      Object.assign(label, best || { left: preferredLeft, top: 8 });
+      placed.push(label);
+    }
+    return labels;
+  }
+
+  drawRacerLabels(visibleRacers) {
+    const ctx = this.ctx;
+    ctx.save();
+    for (const label of this.layoutRacerLabels(visibleRacers)) {
+      const { racer, left, top, width, height, fontSize, anchorX, anchorY } = label;
+      const bottom = top + height;
+      const pointerX = Math.max(left + 8, Math.min(left + width - 8, anchorX));
+      ctx.strokeStyle = '#28354a99'; ctx.lineWidth = 1.2;
+      ctx.beginPath(); ctx.moveTo(pointerX, bottom); ctx.lineTo(anchorX, anchorY + 5); ctx.stroke();
+      roundRect(ctx, left, top, width, height, 7, '#101722f2', racer.color, 1.3);
+      roundRect(ctx, left + 3, top + 3, height - 4, height - 6, 5, racer.color);
+      ctx.textAlign = 'center'; ctx.textBaseline = 'middle';
+      ctx.font = `bold ${Math.round(fontSize * .8)}px Arial`; ctx.fillStyle = '#fff';
+      ctx.fillText(String(racer.id + 1).padStart(2, '0'), left + height / 2 + 1, top + height / 2 + .5);
+      ctx.textAlign = 'left'; ctx.font = label.font; ctx.fillStyle = '#fff';
+      ctx.fillText(label.displayName, left + height + 6, top + height / 2 + .5);
+    }
+    ctx.restore();
   }
 
   drawHair(character) {
