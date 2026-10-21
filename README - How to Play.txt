@@ -92,3 +92,10 @@ The winner is still selected randomly; body size does not affect the odds.
 BUBBLES
 The racers now have a smaller bubble area with individually shaded round
 bubbles and bright highlights, while keeping opaque coverage.
+
+RUNNING AND COURSE SPEED
+Racers now use continuously bending knee and elbow joints, with their
+strides driven by distance traveled. The course is 200 metres, covering twice
+as much floor in the selected race time. Kyle stays just ahead for roughly
+3 seconds in a normal race, then gradually accelerates away to the finish.
+Short race settings scale Kyle's opening chase to fit.

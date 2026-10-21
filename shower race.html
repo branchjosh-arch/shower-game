@@ -466,7 +466,7 @@ h2 { margin: 0; font-family: var(--display); font-weight: 800; font-style: itali
       <section class="game-layout" aria-label="Kyle In The Shower game">
         <div class="race-column">
           <div class="race-toolbar">
-            <div class="room-label"><span class="room-tag">100 M OF MAYHEM</span></div>
+            <div class="room-label"><span class="room-tag">200 M OF MAYHEM</span></div>
             <div class="stage-controls">
               <button id="pause-button" class="icon-button hidden" aria-label="Pause race" title="Pause race"><svg viewBox="0 0 20 20" aria-hidden="true"><path d="M7 4v12M13 4v12" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"/></svg></button>
               <button id="speed-button" class="speed-button" aria-label="Race playback speed">1×</button>
@@ -744,7 +744,7 @@ class RaceEngine {
     for (let cycle = 0; cycle < cycles; cycle += 1) {
       segments.push({
         phase: 'run', duration: 1.3 + this.#random() * 1.8,
-        entrySpeed: cycle === 0 ? 0 : cruiseSpeeds[cycle], exitSpeed: cruiseSpeeds[cycle],
+        entrySpeed: cycle === 0 ? cruiseSpeeds[cycle] * .8 : cruiseSpeeds[cycle], exitSpeed: cruiseSpeeds[cycle],
       });
       segments.push({
         phase: 'slip', style: styles[cycle % styles.length], duration: 0.65 + this.#random() * 0.9,
@@ -834,8 +834,9 @@ const CHARACTER_PRESETS = Object.freeze([
   { id: 19, name: 'The Ginger Handlebar', skin: '#ebc9aa', hair: '#a46c41', hairStyle: 'bald', moustache: true, beard: false, style: { hairStyle: 'bald', facialHair: 'handlebar', build: 1.15, browWidth: 2.8 } },
 ]);
 
+const modelSkin=['#ecb185','#a86740','#edbc94','#cf9566','#edb18b','#e8b68c','#aa704c','#e2aa7c','#e4af86','#ad784e','#e9bb90','#d7a47d'];
 const modelNames = ['The Brown Crop','The Dark Curls','The Blond Sweep','The Bald Goatee','The Red Beard','The Silver Part','The Close Crop','The Wavy Beard','The Buzz Cut','The Afro','The Blond Curls','The Silver Beard'];
-return Object.freeze(CHARACTER_PRESETS.slice(0,12).map((look,id) => ({ ...look, id, name: modelNames[id] })));
+return Object.freeze(CHARACTER_PRESETS.slice(0,12).map((look,id) => ({ ...look, id, name: modelNames[id], skin: modelSkin[id] })));
 
 })();
 
@@ -1466,7 +1467,7 @@ class RacerModel {
   static draw(ctx, racer, character, { time = 0, drawHair, drawFacialHair, drawPortrait, drawBody } = {}) {
     const pose = makePose(racer, time), { skin, style } = character;
     const build = style.build || 1;
-    if (drawBody?.(racer, character, pose, time)) return;
+    if (drawBody?.(racer, character, pose, time, { limb, foot, hand, torso: drawTorso })) return;
     ctx.save();
     const shadow = ctx.createRadialGradient(2, 2, 3, 2, 2, 49);
     shadow.addColorStop(0, '#74899435'); shadow.addColorStop(1, '#74899400');
@@ -1505,7 +1506,7 @@ return RacerModel;
 const RaceRenderer = (() => {
 
 const TAU = Math.PI * 2;
-const TRACK_LENGTH = 3300;
+const TRACK_LENGTH = 6600;
 const START_X = 245;
 const START_SETBACK = 80;
 const SLIP_EXCLAMATIONS = {
@@ -1869,7 +1870,7 @@ class RaceRenderer {
     for(let i=1;i<=3;i++){
       const x=START_X+i*TRACK_LENGTH/4+this.startingSpread()*.5-this.camera;
       if(x<-60||x>this.width+60)continue;
-      roundRect(ctx,x-27,h*.49-43,54,27,6,'#f8f8efcc','#b9cfbf');ctx.font='bold 11px Arial';ctx.fillStyle='#91a996';ctx.textAlign='center';ctx.fillText(`${i*25} m`,x,h*.49-25);
+      roundRect(ctx,x-27,h*.49-43,54,27,6,'#f8f8efcc','#b9cfbf');ctx.font='bold 11px Arial';ctx.fillStyle='#91a996';ctx.textAlign='center';ctx.fillText(`${i*50} m`,x,h*.49-25);
     }
     if(finish+this.courseOffset(top)<this.width+80){
       const fy=h*.49+14,fh=h*.44;
@@ -1922,8 +1923,10 @@ class RaceRenderer {
     return START_X + TRACK_LENGTH + this.laneOffset(this.engine.count - 1) + 120;
   }
 
+  kyleLeadTime() { return Math.min(3, this.engine.duration * .3); }
+
   kyleArrivalTime() {
-    return Math.max(.7, Math.min(2.4, this.engine.duration * .24));
+    return Math.max(this.kyleLeadTime()+.3, Math.min(9,this.engine.duration*.75));
   }
 
   catchProgress() {
@@ -1939,11 +1942,13 @@ class RaceRenderer {
   }
 
   kylePosition(front) {
+    const leadTime=this.kyleLeadTime(),t=this.chaseTime;
     const finish=this.kyleFinishX();
-    // Fixed course position at launch: Kyle accelerates away as soon as GO fires.
-    this.launchWorldX ??= START_X - START_SETBACK + this.laneOffset(this.engine.count-1) + 160;
-    const p=Math.min(1,this.chaseTime/this.kyleArrivalTime());
-    const advance=1-(1-p)**2;
+    // Kyle runs with a small, growing lead while remaining visible to the pack.
+    if(t<=leadTime) return {x:front+120+t*18,waiting:false};
+    this.launchWorldX ??= front+120+leadTime*18;
+    const p=Math.min(1,(t-leadTime)/(this.kyleArrivalTime()-leadTime));
+    const advance=p*p*(3-2*p);
     return {x:this.launchWorldX+(finish-this.launchWorldX)*advance,waiting:p===1};
   }
 
@@ -2040,19 +2045,21 @@ class RaceRenderer {
       ? {pack:3,row:racer.characterId%4} : {pack:Math.floor(racer.characterId/4),row:racer.characterId%4};
   }
 
-  drawFullComicBody(racer, character, pose, time) {
+  drawFullComicBody(racer, character, pose, time, rig) {
     const {pack,row}=this.modelFor(racer),atlas=this.fullModelPacks?.[pack];
     if(!atlas?.frames)return false;
     const slipping=racer.phase==='slip';
     const moving=racer.phase==='run';
-    const cycle=[1,2,3,2];
-    let frame=moving ? (this.reducedMotion?2:cycle[Math.floor(time*10+racer.id)%4]) : 0;
-    if(pack===2 && row===3 && frame===3) frame=2;
+    const frame=0;
     const source=atlas.frames[row*4+frame];
     const height=215,width=height*source.width/source.height;
     const ctx=this.ctx;
     ellipse(ctx,0,3,character.fat?55:38,6,'#29364935');
     ctx.save();ctx.translate(pose.hip[0],pose.hip[1]);ctx.rotate(pose.angle);ctx.scale(pose.squashX,1);
+    if(moving && !this.reducedMotion) {
+      this.drawArticulatedRunner(atlas,source,pose,character,width,height,rig);
+      ctx.restore();return true;
+    }
     // Head, torso, arms and legs all come from the SAME full-character frame.
     const paint=()=>ctx.drawImage(atlas.image,source.left,source.top,source.width,source.height,-width/2,-125,width,height);
     if(slipping && !this.reducedMotion) {
@@ -2071,6 +2078,30 @@ class RaceRenderer {
     } else paint();
     this.drawRacerBubbles(character.fat);
     ctx.restore();return true;
+  }
+
+  drawArticulatedRunner(atlas,source,pose,character,width,height,rig) {
+    const ctx=this.ctx,skin=character.skin,build=character.style.build||1;
+    ctx.scale(1/pose.squashX,1);ctx.rotate(-pose.angle);ctx.translate(-pose.hip[0],-pose.hip[1]);
+    const image=()=>ctx.drawImage(atlas.image,source.left,source.top,source.width,source.height,-width/2,-125,width,height);
+    const hip=(side)=>[pose.hip[0]+side*10*build,pose.hip[1]+4];
+    rig.limb(ctx,[hip(-1),pose.backKnee,pose.backFoot],[21*build,12.5,7],skin,true,true);
+    rig.foot(ctx,pose.backFoot,skin,true);
+    rig.limb(ctx,[pose.backShoulder,pose.backElbow,pose.backHand],[15.5*build,10,6.3],skin,true);
+    rig.hand(ctx,pose.backHand,pose.backElbow,skin,false,true);
+    rig.limb(ctx,[hip(1),pose.frontKnee,pose.frontFoot],[22*build,13,7.5],skin,false,true);
+    rig.foot(ctx,pose.frontFoot,skin);
+    ctx.save();ctx.translate(...pose.hip);ctx.rotate(pose.angle);ctx.scale(pose.squashX,1);
+    const root=character.fat?31:21;
+    rig.torso(ctx,character);
+    ctx.save();ctx.beginPath();ctx.rect(-width/2-1,-126,width+2,143);
+    ctx.rect(-width/2-1,-65,Math.max(1,width/2-root+4),82);
+    ctx.rect(root-3,-65,Math.max(1,width/2-root+4),82);
+    ctx.clip('evenodd');image();ctx.restore();ctx.restore();
+    rig.limb(ctx,[pose.frontShoulder,pose.frontElbow,pose.frontHand],[16*build,10.5,6.5],skin);
+    rig.hand(ctx,pose.frontHand,pose.frontElbow,skin,false);
+    ctx.save();ctx.translate(...pose.hip);ctx.rotate(pose.angle);ctx.scale(pose.squashX,1);
+    this.drawRacerBubbles(character.fat);ctx.restore();
   }
 
   drawRacerBubbles(fat = false) {
@@ -2100,11 +2131,11 @@ class RaceRenderer {
     const ctx = this.ctx;
     const preset = CHARACTER_PRESETS[racer.characterId] || CHARACTER_PRESETS[racer.id % CHARACTER_PRESETS.length];
     const character = racer.id === this.heavyRacerId
-      ? { ...preset, fat: true, style: { ...preset.style, build: 1.65 } } : preset;
+      ? { ...preset, fat: true, skin: ['#ecb185','#a86740','#edbc94','#cf9566'][racer.characterId%4], style: { ...preset.style, build: 1.65 } } : preset;
     ctx.save(); ctx.translate(x,y); ctx.scale(scale,scale);
     RacerModel.draw(ctx,racer,character,{
-      time: this.time,
-      drawBody: (person, look, pose, time) => this.drawFullComicBody(person, look, pose, time),
+      time: racer.phase === 'run' ? this.racerWorldX(racer) / 230 : this.time,
+      drawBody: (person, look, pose, time, rig) => this.drawFullComicBody(person, look, pose, time, rig),
       drawHair: () => this.drawHair(character),
       drawFacialHair: () => this.drawFacialHair(character),
     });
@@ -2570,7 +2601,7 @@ function updateLineup() {
     row.rank.title = started ? `Place ${index + 1}, racer ${racer.id + 1}` : `Racer ${racer.id + 1}, starting position ${index + 1}`;
     row.edit.classList.toggle('hidden', started || active());
     row.distance.classList.toggle('hidden', !started);
-    row.distance.textContent = racer.finished ? timeText(racer.finishTime) : `${Math.floor(racer.x * 100)}m`;
+    row.distance.textContent = racer.finished ? timeText(racer.finishTime) : `${Math.floor(racer.x * 200)}m`;
     row.title.textContent = racer.finished ? (racer.place === 1 ? 'Slippery little champion' : 'Squeaky-clean finish') : racer.slipping ? (slipDescriptions[racer.slipStyle] || 'Whoops! Losing ground…') : CHARACTER_PRESETS[racer.characterId].name;
     // Preserve focus and scroll position while the standings change.
     const current = list.children[index];
