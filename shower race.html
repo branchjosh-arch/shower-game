@@ -1969,7 +1969,7 @@ class RaceRenderer {
     if (running && this.kyleRunFrames) {
       const frame = this.kyleRunFrames[this.reducedMotion ? 0 : Math.floor(this.time*12)%4];
       const frameWidth=height*frame.width/frame.height;
-      ctx.drawImage(this.kyleRunAtlas,frame.left,frame.top,frame.width,frame.height,-frameWidth/2,-height,frameWidth,height);
+      ctx.drawImage(frame.image||this.kyleRunAtlas,frame.left,frame.top,frame.width,frame.height,-frameWidth/2,-height,frameWidth,height);
     } else ctx.drawImage(image,-width/2,-height,width,height);
     ctx.restore();
   }
@@ -2031,11 +2031,72 @@ class RaceRenderer {
           if(data[(y*scratch.width+x)*4+3]<80)continue;
           left=Math.min(left,x);right=Math.max(right,x);top=Math.min(top,y);bottom=Math.max(bottom,y);
         }
+      // Ignore small detached fragments from neighbouring atlas cells when cropping.
+      const cellWidth=right-left+1,cellHeight=bottom-top+1;
+      const rawLeft=left,rawTop=top;
+      const seen=new Int32Array(cellWidth*cellHeight),queue=new Int32Array(cellWidth*cellHeight);
+      let largest=null,opaque=0,componentId=0;
+      for(let ly=0;ly<cellHeight;ly++)for(let lx=0;lx<cellWidth;lx++){
+        const start=ly*cellWidth+lx;
+        if(data[((top+ly)*scratch.width+left+lx)*4+3]>=80)opaque++;
+        if(seen[start]||data[((top+ly)*scratch.width+left+lx)*4+3]<80)continue;
+        let head=0,tail=1,count=0,l=lx,r=lx,t=ly,b=ly;queue[0]=start;componentId++;seen[start]=componentId;
+        while(head<tail){
+          const index=queue[head++],x=index%cellWidth,y=Math.floor(index/cellWidth);count++;
+          l=Math.min(l,x);r=Math.max(r,x);t=Math.min(t,y);b=Math.max(b,y);
+          for(const [nx,ny] of [[x-1,y],[x+1,y],[x,y-1],[x,y+1]]){
+            if(nx<0||ny<0||nx>=cellWidth||ny>=cellHeight)continue;
+            const ni=ny*cellWidth+nx;
+            if(seen[ni]||data[((top+ny)*scratch.width+left+nx)*4+3]<80)continue;
+            seen[ni]=componentId;queue[tail++]=ni;
+          }
+        }
+        if(!largest||count>largest.count)largest={count,l,r,t,b,id:componentId};
+      }
+      if(largest && largest.count>opaque*.65){
+        right=left+largest.r;bottom=top+largest.b;left+=largest.l;top+=largest.t;
+      }
+      // A neighbouring foot may leave a one- or two-pixel sliver above the hair.
+      // Start at the first sustained opaque band, retaining a small hair margin.
+      let streak=0;
+      for(let y=top;y<top+(bottom-top)*.23;y++){
+        let filled=0;for(let x=left;x<=right;x++)if(data[(y*scratch.width+x)*4+3]>200)filled++;
+        streak=filled>=7?streak+1:0;
+        if(streak>=5){top=Math.max(top,y-7);break;}
+      }
       const width=right-left+1,height=bottom-top+1;
       let headSum=0,headPixels=0;
       for(let y=top;y<top+height*.23;y++)for(let x=left;x<=right;x++)
         if(data[(y*scratch.width+x)*4+3]>100){headSum+=x;headPixels++;}
-      frames.push({left,top,width,height,headX:headPixels?headSum/headPixels:left+width/2});
+      // The shorts are opaque white artwork. Their bounds give every pose a
+      // reliable waist/coverage anchor, including bent legs and larger builds.
+      let wl=Infinity,wt=Infinity,wr=-1,wb=-1;
+      for(let y=Math.floor(top+height*.4);y<top+height*.8;y++)for(let x=left;x<=right;x++){
+        const i=(y*scratch.width+x)*4,r=data[i],g=data[i+1],b=data[i+2];
+        if(data[i+3]<120||Math.min(r,g,b)<175||Math.max(r,g,b)-Math.min(r,g,b)>38)continue;
+        wl=Math.min(wl,x);wr=Math.max(wr,x);wt=Math.min(wt,y);wb=Math.max(wb,y);
+      }
+      const waist=wr>=wl ? {x:(wl+wr)/2,y:(wt+wb)/2,width:wr-wl+1,height:wb-wt+1}
+        : {x:left+width*.5,y:top+height*.6,width:width*.65,height:height*.22};
+      const clean=document.createElement('canvas');clean.width=width;clean.height=height;
+      const cleanCtx=clean.getContext('2d'),pixels=cleanCtx.createImageData(width,height);
+      for(let y=0;y<height;y++)for(let x=0;x<width;x++){
+        const lx=left-rawLeft+x,ly=top-rawTop+y,index=ly*cellWidth+lx;
+        let keep=seen[index]===largest?.id;
+        if(!keep && data[((top+y)*scratch.width+left+x)*4+3]<80){
+          for(const [dx,dy] of [[-1,0],[1,0],[0,-1],[0,1]]){
+            const nx=lx+dx,ny=ly+dy;
+            if(nx>=0&&ny>=0&&nx<cellWidth&&ny<cellHeight&&seen[ny*cellWidth+nx]===largest?.id)keep=true;
+          }
+        }
+        if(!keep)continue;
+        const from=((top+y)*scratch.width+left+x)*4,to=(y*width+x)*4;
+        pixels.data.set(data.subarray(from,from+4),to);
+      }
+      cleanCtx.putImageData(pixels,0,0);
+      frames.push({image:clean,left:0,top:0,width,height,
+        waist:{...waist,x:waist.x-left,y:waist.y-top},
+        headX:(headPixels?headSum/headPixels:left+width/2)-left});
     }
     return frames;
   }
@@ -2045,68 +2106,44 @@ class RaceRenderer {
       ? {pack:3,row:racer.characterId%4} : {pack:Math.floor(racer.characterId/4),row:racer.characterId%4};
   }
 
-  drawFullComicBody(racer, character, pose, time, rig) {
+  drawFullComicBody(racer, character, pose, time) {
     const {pack,row}=this.modelFor(racer),atlas=this.fullModelPacks?.[pack];
     if(!atlas?.frames)return false;
-    const slipping=racer.phase==='slip';
-    const moving=racer.phase==='run';
-    const frame=0;
-    const source=atlas.frames[row*4+frame];
-    const height=215,width=height*source.width/source.height;
-    const ctx=this.ctx;
-    ellipse(ctx,0,3,character.fat?55:38,6,'#29364935');
-    ctx.save();ctx.translate(pose.hip[0],pose.hip[1]);ctx.rotate(pose.angle);ctx.scale(pose.squashX,1);
-    if(moving && !this.reducedMotion) {
-      this.drawArticulatedRunner(atlas,source,pose,character,width,height,rig);
-      ctx.restore();return true;
-    }
-    // Head, torso, arms and legs all come from the SAME full-character frame.
-    const paint=()=>ctx.drawImage(atlas.image,source.left,source.top,source.width,source.height,-width/2,-125,width,height);
+    const moving=racer.phase==='run',slipping=racer.phase==='slip';
+    const cycle=[1,2,3,2];
+    let frame=0;
+    if(moving) frame=this.reducedMotion?2:cycle[Math.floor(this.racerWorldX(racer)/48+racer.id)%4];
     if(slipping && !this.reducedMotion) {
-      const root=character.fat?31:21;
-      const left=[-width/2-1,-65,Math.max(1,width/2-root+4),78];
-      const right=[root-3,-65,Math.max(1,width/2-root+4),78];
-      ctx.save();ctx.beginPath();ctx.rect(-width/2-1,-126,width+2,217);
-      ctx.rect(...left);ctx.rect(...right);ctx.clip('evenodd');paint();ctx.restore();
-      // One outward-and-back flail, driven by slip progress rather than a looping clock.
-      const p=Math.max(0,Math.min(1,racer.phaseProgress||0));
-      const flail=Math.sin(Math.PI*p)*2.1;
-      for(const [side,region] of [[-1,left],[1,right]]) {
-        ctx.save();ctx.translate(side*root,-65);ctx.rotate(-side*flail);ctx.translate(-side*root,65);
-        ctx.beginPath();ctx.rect(...region);ctx.clip();paint();ctx.restore();
-      }
-    } else paint();
-    this.drawRacerBubbles(character.fat);
+      const p=racer.phaseProgress||0;
+      // One complete raised-arm stumble, then recover; no cut-out or overlaid limbs.
+      frame=p>.2 && p<.8 ? 1 : 0;
+    }
+    if(pack===2 && row===3 && frame===3)frame=2;
+    const source=atlas.frames[row*4+frame],height=215,scale=height/source.height;
+    const width=source.width*scale,ctx=this.ctx;
+    const waist=source.waist;
+    const x=-(waist.x-source.left)*scale;
+    const y=-125;
+    ellipse(ctx,0,3,character.fat?55:38,6,'#29364935');
+    ctx.save();ctx.translate(pose.hip[0],pose.hip[1]);
+    // Apply one whole-figure lean, preserving every joint and the original anatomy.
+    const tilt=slipping && !this.reducedMotion ? Math.sin((racer.phaseProgress||0)*Math.PI)*.18 : moving?.06:0;
+    ctx.rotate(tilt);
+    ctx.drawImage(source.image||atlas.image,source.left,source.top,source.width,source.height,x,y,width,height);
+    this.drawRacerBubbles(character.fat,{
+      x:0,y:y+(waist.y-source.top)*scale,
+      width:Math.max(character.fat?86:67,waist.width*scale+9),
+      height:Math.max(43,waist.height*scale+7),
+    });
     ctx.restore();return true;
   }
 
-  drawArticulatedRunner(atlas,source,pose,character,width,height,rig) {
-    const ctx=this.ctx,skin=character.skin,build=character.style.build||1;
-    ctx.scale(1/pose.squashX,1);ctx.rotate(-pose.angle);ctx.translate(-pose.hip[0],-pose.hip[1]);
-    const image=()=>ctx.drawImage(atlas.image,source.left,source.top,source.width,source.height,-width/2,-125,width,height);
-    const hip=(side)=>[pose.hip[0]+side*10*build,pose.hip[1]+4];
-    rig.limb(ctx,[hip(-1),pose.backKnee,pose.backFoot],[21*build,12.5,7],skin,true,true);
-    rig.foot(ctx,pose.backFoot,skin,true);
-    rig.limb(ctx,[pose.backShoulder,pose.backElbow,pose.backHand],[15.5*build,10,6.3],skin,true);
-    rig.hand(ctx,pose.backHand,pose.backElbow,skin,false,true);
-    rig.limb(ctx,[hip(1),pose.frontKnee,pose.frontFoot],[22*build,13,7.5],skin,false,true);
-    rig.foot(ctx,pose.frontFoot,skin);
-    ctx.save();ctx.translate(...pose.hip);ctx.rotate(pose.angle);ctx.scale(pose.squashX,1);
-    const root=character.fat?31:21;
-    rig.torso(ctx,character);
-    ctx.save();ctx.beginPath();ctx.rect(-width/2-1,-126,width+2,143);
-    ctx.rect(-width/2-1,-65,Math.max(1,width/2-root+4),82);
-    ctx.rect(root-3,-65,Math.max(1,width/2-root+4),82);
-    ctx.clip('evenodd');image();ctx.restore();ctx.restore();
-    rig.limb(ctx,[pose.frontShoulder,pose.frontElbow,pose.frontHand],[16*build,10.5,6.5],skin);
-    rig.hand(ctx,pose.frontHand,pose.frontElbow,skin,false);
-    ctx.save();ctx.translate(...pose.hip);ctx.rotate(pose.angle);ctx.scale(pose.squashX,1);
-    this.drawRacerBubbles(character.fat);ctx.restore();
-  }
-
-  drawRacerBubbles(fat = false) {
+  drawRacerBubbles(fat = false, bounds = null) {
     const ctx=this.ctx;
-    ctx.save();ctx.translate(0,7);ctx.scale(fat?1.28:1,1);
+    ctx.save();
+    if(bounds) {
+      ctx.translate(bounds.x,bounds.y);ctx.scale(bounds.width/80,bounds.height/62);ctx.translate(1,-5);
+    } else { ctx.translate(0,7);ctx.scale(fat?1.28:1,1); }
     // Compact overlapping opaque bubbles replace the large smooth cloud.
     const bubbles=[
       [-23,-12,9],[-9,-14,11],[6,-13,10],[21,-10,9],
@@ -2528,7 +2565,7 @@ function makeAvatar(racer) {
     const avatar=document.createElement('canvas');avatar.width=80;avatar.height=80;
     avatar.className='racer-avatar character-avatar';avatar.setAttribute('aria-hidden','true');
     const frame=model.frames[row*4],size=frame.height*.3;
-    avatar.getContext('2d').drawImage(model.image,frame.headX-size/2,frame.top,size,size,0,0,80,80);
+    avatar.getContext('2d').drawImage(frame.image||model.image,frame.headX-size/2,frame.top,size,size,0,0,80,80);
     return avatar;
   }
   const preset = CHARACTER_PRESETS[racer.characterId] || CHARACTER_PRESETS[racer.id % CHARACTER_PRESETS.length];

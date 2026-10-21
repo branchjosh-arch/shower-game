@@ -86,7 +86,7 @@ Kyle also has a running cycle, and his previous 2-second lead hold is removed.
 
 SINGLE SLIP
 Each racer now slips exactly once per race. Every slip uses the same single
-outward-and-back flailing-arm animation, followed by normal running.
+complete-character raised-arm stumble animation, followed by normal running.
 The winner is still selected randomly; body size does not affect the odds.
 
 BUBBLES
@@ -94,8 +94,13 @@ The racers now have a smaller bubble area with individually shaded round
 bubbles and bright highlights, while keeping opaque coverage.
 
 RUNNING AND COURSE SPEED
-Racers now use continuously bending knee and elbow joints, with their
-strides driven by distance traveled. The course is 200 metres, covering twice
+Racers use intact illustrated running frames, with their strides driven
+by distance traveled and bubbles anchored to the waist in each pose. The course is 200 metres, covering twice
 as much floor in the selected race time. Kyle stays just ahead for roughly
 3 seconds in a normal race, then gradually accelerates away to the finish.
 Short race settings scale Kyle's opening chase to fit.
+
+CHARACTER ALIGNMENT FIX
+The mixed joint/illustration renderer has been removed. Complete character
+frames keep arms, legs, heads and bodies aligned. Bubble coverage follows
+the actual waist in each frame, and stray sprite fragments are removed.
