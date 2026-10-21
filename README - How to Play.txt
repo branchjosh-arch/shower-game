@@ -62,3 +62,8 @@ The racers have 20 randomized comic character looks in Kyle's art style.
 Use Randomize looks for a different cast. Bubbles cover the racers' hips.
 Exactly one randomly selected racer per race has a fat body type.
 Body size is visual only and never changes speed, slips, or winning odds.
+
+FULL CHARACTER MODELS
+Racers now use illustrated comic torsos, arms, hands, legs and feet,
+with four-frame running cycles and distinct body builds. Opaque bubbles
+cover white swim shorts underneath. Kyle remains fully clothed.
