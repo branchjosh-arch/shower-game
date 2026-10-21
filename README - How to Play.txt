@@ -1,4 +1,4 @@
-KYLE'S POWER SHOWER RACE
+KYLE IN THE SHOWER
 How to open and play
 
 OPEN THE GAME (WINDOWS)
@@ -13,7 +13,9 @@ No installation, account, or internet connection is needed after downloading.
 
 SET UP A RACE
 1. Use the minus and plus buttons to choose 2-10 racers.
-2. Click each name in THE LINEUP and type your own player name.
+2. Paste 2-10 names into "Paste your racer names", one per line or separated
+   by commas, then click "Use names". The racer count updates automatically.
+   You can also click an individual name in THE LINEUP to edit it.
    Each racer's name and number appear above them on the track.
 3. Click "Randomize looks" to mix up the characters. There are 20 looks.
    The CHARACTER LOOKS menu controls how many looks are available.
@@ -22,7 +24,9 @@ SET UP A RACE
    90 seconds is 1 minute 30 seconds. A separate 3-second countdown comes first.
 6. Click "Start the race" and watch!
 
-The racers move automatically. You do not steer or control them.
+Your racers automatically chase Kyle, the fully clothed character in the orange
+vest, bandana, and sunglasses from the portrait above the back wall.
+First to the finish wins the chase. You do not steer or control the racers.
 Slips and slides slow them down and change their places in the race.
 Everyone slips or slides at least twice. The winner is chosen randomly;
 names, character looks, and starting order do not change the odds.
@@ -52,3 +56,9 @@ IF IT DOES NOT OPEN
 Make sure you extracted the ZIP first, then open shower race.html with
 Chrome or Edge. If you see text or code, use "Open with" to choose a browser.
 This README is a text file; open the HTML file to play the game.
+
+CHARACTER ART
+The racers have 20 randomized comic character looks in Kyle's art style.
+Use Randomize looks for a different cast. Bubbles cover the racers' hips.
+Exactly one randomly selected racer per race has a fat body type.
+Body size is visual only and never changes speed, slips, or winning odds.
