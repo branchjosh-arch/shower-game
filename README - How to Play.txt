@@ -28,11 +28,13 @@ Their arms and legs keep cycling in an energetic running style like Kyle's,
 including in longer races. Head and body artwork stay together.
 Kyle runs just ahead for about 3 seconds in a normal race, then accelerates
 out of view and waits at the finish. Short race settings scale this opening.
-The view keeps the entire field on screen, with trailing racers spread out
-rather than bunched against the left edge.
-Every racer slips exactly once: a single arm flail and a brief slowdown,
-then normal running resumes. Racers stay upright without jumping or falling.
-Race timing and winning odds are unchanged.
+The view keeps the field on screen using a shared camera projection.
+Racers can bunch together, run side by side, and overtake naturally.
+Every racer slips exactly once with a quick skid, counterbalance step,
+and a surprised face (wide eyes, raised brows and an open mouth), then
+recovers into running. Race timing and winning odds are unchanged.
+The larger progress tracker records who first reaches 50, 100, 150 and
+200 metres, showing their name above each checkpoint line.
 Small shaded bubbles cover the racers' swim shorts. Kyle stays fully clothed.
 Exactly one randomly selected racer per race has a fat body type.
 The winner is chosen randomly. Body size, names, looks and lanes do not
