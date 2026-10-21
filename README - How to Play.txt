@@ -67,3 +67,9 @@ FULL CHARACTER MODELS
 Racers now use illustrated comic torsos, arms, hands, legs and feet,
 with four-frame running cycles and distinct body builds. Opaque bubbles
 cover white swim shorts underneath. Kyle remains fully clothed.
+
+KYLE AND THE FINISH
+Kyle leads for the first 2 race seconds, then sprints off to the right
+and waits at the finish. The winner jumps into Kyle's arms. Results appear
+after the catch. Short races still show the complete celebration.
+This animation does not change the selected winner or finish times.
