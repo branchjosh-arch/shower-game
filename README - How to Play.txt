@@ -8,6 +8,8 @@ OPEN THE GAME (WINDOWS)
    If needed, use "Open with" and select Chrome or Edge.
 Open the extracted HTML file rather than opening it inside the ZIP.
 The game includes its artwork and sounds and works offline.
+A loading screen stays up until the current artwork is ready.
+The original character art has been removed from the game.
 
 SET UP A RACE
 1. Paste 2-10 names into "Paste your racer names", one per line or separated
