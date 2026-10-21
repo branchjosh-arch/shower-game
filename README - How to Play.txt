@@ -2,105 +2,57 @@ KYLE IN THE SHOWER
 How to open and play
 
 OPEN THE GAME (WINDOWS)
-1. Download shower race.zip to your computer.
-2. Right-click the ZIP and choose "Extract All...", then click "Extract".
-3. Open the extracted folder.
-4. Double-click shower race.html to play in your browser.
-   If needed, right-click it, choose "Open with", and select Chrome or Edge.
-
-Open the extracted HTML file, rather than opening it from inside the ZIP.
-No installation, account, or internet connection is needed after downloading.
+1. Download shower race.zip.
+2. Right-click the ZIP and choose "Extract All...".
+3. Open the extracted folder and double-click shower race.html.
+   If needed, use "Open with" and select Chrome or Edge.
+Open the extracted HTML file rather than opening it inside the ZIP.
+The game includes its artwork and sounds and works offline.
 
 SET UP A RACE
-1. Use the minus and plus buttons to choose 2-10 racers.
-2. Paste 2-10 names into "Paste your racer names", one per line or separated
+1. Paste 2-10 names into "Paste your racer names", one per line or separated
    by commas, then click "Use names". The racer count updates automatically.
-   You can also click an individual name in THE LINEUP to edit it.
-   Each racer's name and number appear above them on the track.
-3. Click "Randomize looks" to mix up the characters. There are 12 looks.
-   The CHARACTER LOOKS menu controls how many looks are available.
-4. Click "Randomize order" to shuffle the starting line.
-5. Set RACE LENGTH with the slider or seconds box: 1-90 seconds.
-   90 seconds is 1 minute 30 seconds. A separate 3-second countdown comes first.
-6. Click "Start the race" and watch!
+   You can also use the minus/plus buttons and edit individual lineup names.
+2. Use "Randomize looks" for a different cast. There are 12 ordinary comic
+   character looks; Kyle is excluded from the racer pool.
+   CHARACTER LOOKS controls how many looks are available.
+3. Use "Randomize order" to shuffle the starting lanes.
+4. Set RACE LENGTH from 1-90 seconds. A separate 3-second countdown comes first.
+5. Click "Start the race" once the artwork is ready.
+Settings are saved when your browser permits local storage.
 
-Your racers automatically chase Kyle, the fully clothed character in the orange
-vest, bandana, and sunglasses from the portrait above the back wall.
-First to the finish wins the chase. You do not steer or control the racers.
-The single slip slows each racer down and can change their place in the race.
-Every racer slips exactly once, with one flailing-arm animation. The winner is chosen randomly;
-names, character looks, and starting order do not change the odds.
+THE CHASE
+Racers move automatically across a 200-metre shower-room course.
+Their arms and legs keep cycling in an energetic running style like Kyle's,
+including in longer races. Head and body artwork stay together.
+Kyle runs just ahead for about 3 seconds in a normal race, then accelerates
+out of view and waits at the finish. Short race settings scale this opening.
+Every racer slips exactly once, then resumes running.
+Small shaded bubbles cover the racers' swim shorts. Kyle stays fully clothed.
+Exactly one randomly selected racer per race has a fat body type.
+The winner is chosen randomly. Body size, names, looks and lanes do not
+change the odds. You do not steer or control the racers.
 
-DURING AND AFTER THE RACE
-- Pause with the pause button, then click "Resume race" to continue.
-- Click 1x/2x in the toolbar to change playback speed. At 2x, the race
-  and countdown play twice as fast.
-- Click the speaker icon to turn sound on or off. Sound starts off.
-- Click the expand icon for a larger race view.
-- After the results, click "Let's slip again" or "Race again" for a new race.
-- Keyboard: Space starts or pauses; R starts another race after one finishes.
-  Keyboard shortcuts do not apply while you are editing a field.
+THE FINISH
+The winner pushes off and makes a tucked airborne leap toward Kyle.
+Dedicated catch artwork shows Kyle supporting the winner's back and knees,
+bending to absorb the landing, then standing with the winner held in his arms.
+The results card appears after the catch and hold.
+Click "Let's slip again" or "Race again" for another random race.
+
+CONTROLS
+- Pause/resume with the pause button.
+- Use 1x/2x to change race and animation playback speed.
+- Use the speaker button for sound, which starts off.
+- Use the expand button for a larger race view.
+- Space starts or pauses; R starts another race after one finishes.
+  Keyboard shortcuts do not apply while editing a field.
 
 SHARE WITH FRIENDS
-Send shower race.zip so your friends receive both the game and this guide.
-They should extract it and open shower race.html in their own browser.
-A file:///C:/... address only points to your own computer; sharing that
-address will not let anyone else play. A click-and-play web address requires
-the game to be hosted as a website.
+Send shower race.zip, then have friends extract it and open shower race.html.
+A file:/// address only points to your own computer and cannot be shared
+as a playable web link.
 
 FILES INCLUDED
-- shower race.html: the complete game, including its artwork and sounds.
-- README - How to Play.txt: this separate instruction file.
-
-IF IT DOES NOT OPEN
-Make sure you extracted the ZIP first, then open shower race.html with
-Chrome or Edge. If you see text or code, use "Open with" to choose a browser.
-This README is a text file; open the HTML file to play the game.
-
-CHARACTER ART
-The racers have 12 randomized comic character looks in Kyle's art style.
-Use Randomize looks for a different cast. Bubbles cover the racers' hips.
-Exactly one randomly selected racer per race has a fat body type.
-Body size is visual only and never changes speed, slips, or winning odds.
-
-FULL CHARACTER MODELS
-Racers now use illustrated comic torsos, arms, hands, legs and feet,
-with relaxed standing poses and three-frame running cycles and distinct body builds. Opaque bubbles
-cover white swim shorts underneath. Kyle remains fully clothed.
-
-KYLE AND THE FINISH
-Kyle sprints away immediately when GO appears, leaves the screen to the right,
-and waits at the finish. Every racer runs after him from the start. The winner jumps into Kyle's arms. Results appear
-after the catch. Short races still show the complete celebration.
-This animation does not change the selected winner or finish times.
-
-RACER APPEARANCE
-Kyle is excluded from the 12 racer looks and has no overhead name label.
-Racers stand comfortably before the start and run when the race begins.
-Their bodies have ordinary, softer proportions, with one fat racer per race.
-
-UNIFIED RUNNING ANIMATION
-The 12 racer looks now use complete illustrated character frames, so heads
-and bodies match and move together. Running cycles animate the arms and legs.
-Kyle also has a running cycle, and his previous 2-second lead hold is removed.
-
-SINGLE SLIP
-Each racer now slips exactly once per race. Every slip uses the same single
-complete-character raised-arm stumble animation, followed by normal running.
-The winner is still selected randomly; body size does not affect the odds.
-
-BUBBLES
-The racers now have a smaller bubble area with individually shaded round
-bubbles and bright highlights, while keeping opaque coverage.
-
-RUNNING AND COURSE SPEED
-Racers use intact illustrated running frames, with their strides driven
-by distance traveled and bubbles anchored to the waist in each pose. The course is 200 metres, covering twice
-as much floor in the selected race time. Kyle stays just ahead for roughly
-3 seconds in a normal race, then gradually accelerates away to the finish.
-Short race settings scale Kyle's opening chase to fit.
-
-CHARACTER ALIGNMENT FIX
-The mixed joint/illustration renderer has been removed. Complete character
-frames keep arms, legs, heads and bodies aligned. Bubble coverage follows
-the actual waist in each frame, and stray sprite fragments are removed.
+- shower race.html: the complete game, artwork and sounds.
+- README - How to Play.txt: this guide.
