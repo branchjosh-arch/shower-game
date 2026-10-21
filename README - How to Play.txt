@@ -27,8 +27,8 @@ SET UP A RACE
 Your racers automatically chase Kyle, the fully clothed character in the orange
 vest, bandana, and sunglasses from the portrait above the back wall.
 First to the finish wins the chase. You do not steer or control the racers.
-Slips and slides slow them down and change their places in the race.
-Everyone slips or slides at least twice. The winner is chosen randomly;
+The single slip slows each racer down and can change their place in the race.
+Every racer slips exactly once, with one flailing-arm animation. The winner is chosen randomly;
 names, character looks, and starting order do not change the odds.
 
 DURING AND AFTER THE RACE
@@ -83,3 +83,8 @@ UNIFIED RUNNING ANIMATION
 The 12 racer looks now use complete illustrated character frames, so heads
 and bodies match and move together. Running cycles animate the arms and legs.
 Kyle also has a running cycle, and his previous 2-second lead hold is removed.
+
+SINGLE SLIP
+Each racer now slips exactly once per race. Every slip uses the same single
+outward-and-back flailing-arm animation, followed by normal running.
+The winner is still selected randomly; body size does not affect the odds.
