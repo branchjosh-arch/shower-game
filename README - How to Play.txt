@@ -88,3 +88,7 @@ SINGLE SLIP
 Each racer now slips exactly once per race. Every slip uses the same single
 outward-and-back flailing-arm animation, followed by normal running.
 The winner is still selected randomly; body size does not affect the odds.
+
+BUBBLES
+The racers now have a smaller bubble area with individually shaded round
+bubbles and bright highlights, while keeping opaque coverage.
