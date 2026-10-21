@@ -12,15 +12,14 @@ A loading screen stays up until the current artwork is ready.
 The original character art has been removed from the game.
 
 SET UP A RACE
-1. Paste 2-10 names into "Paste your racer names", one per line or separated
+1. Paste 2-10 names into "Your racer names", one per line or separated
    by commas, then click "Use names". The racer count updates automatically.
    You can also use the minus/plus buttons and edit individual lineup names.
-2. Use "Randomize looks" for a different cast. There are 12 ordinary comic
-   character looks; Kyle is excluded from the racer pool.
-   CHARACTER LOOKS controls how many looks are available.
-3. Use "Randomize order" to shuffle the starting lanes.
-4. Set RACE LENGTH from 1-90 seconds. A separate 3-second countdown comes first.
-5. Click "Start the race" once the artwork is ready.
+2. Click "Randomize lineup" to change every racer's look and shuffle the
+   starting lanes together. Names stay with their racers. All 12 ordinary
+   comic character looks are available; Kyle is excluded from the racer pool.
+3. Set RACE LENGTH from 1-90 seconds. A separate 3-second countdown comes first.
+4. Click "Start the race" once the artwork is ready.
 Settings are saved when your browser permits local storage.
 
 THE CHASE
@@ -29,7 +28,9 @@ Their arms and legs keep cycling in an energetic running style like Kyle's,
 including in longer races. Head and body artwork stay together.
 Kyle runs just ahead for about 3 seconds in a normal race, then accelerates
 out of view and waits at the finish. Short race settings scale this opening.
-Every racer slips exactly once, then resumes running.
+Every racer slips exactly once: their feet kick forward, they reel backward,
+then lunge forward to recover. A wide skid and water spray mark the stumble
+before they resume running. This does not change race timing or odds.
 Small shaded bubbles cover the racers' swim shorts. Kyle stays fully clothed.
 Exactly one randomly selected racer per race has a fat body type.
 The winner is chosen randomly. Body size, names, looks and lanes do not
